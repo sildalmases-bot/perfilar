@@ -1,0 +1,273 @@
+{
+ "puestos": {
+  "p01": {
+   "codigo": "P-01",
+   "titulo": "Asistente Administrativo/a",
+   "cliente": "Administración · Casa central",
+   "tipo": "especializada",
+   "vacantes": 1,
+   "zona": "Centro",
+   "rubros": [
+    "administración",
+    "finanzas y contabilidad",
+    "atención al cliente"
+   ],
+   "expMin": 1,
+   "inglesMin": "ninguno",
+   "inglesExcl": false,
+   "habExcl": [
+    "Excel"
+   ],
+   "habDes": [
+    "facturación",
+    "atención telefónica",
+    "archivo",
+    "manejo de agenda"
+   ],
+   "turnos": [
+    "mañana",
+    "tarde"
+   ],
+   "turnosExcl": false,
+   "perfil": "Persona prolija y organizada para tareas administrativas de casa central: facturación a proveedores, archivo, agenda de la gerencia y atención telefónica. Horario de oficina de lunes a viernes.",
+   "pesos": {
+    "exp": 30,
+    "hab": 30,
+    "ing": 5,
+    "ubi": 15,
+    "ia": 20
+   },
+   "estado": "abierta",
+   "creado": "2026-10-20T14:15:00.000Z"
+  },
+  "p02": {
+   "codigo": "P-02",
+   "titulo": "Vendedor/a de Salón",
+   "cliente": "Sucursal Punta Carretas",
+   "tipo": "masiva",
+   "vacantes": 4,
+   "zona": "Punta Carretas",
+   "rubros": [
+    "comercio y retail",
+    "ventas",
+    "atención al cliente"
+   ],
+   "expMin": 1,
+   "inglesMin": "ninguno",
+   "inglesExcl": false,
+   "habExcl": [],
+   "habDes": [
+    "atención al cliente",
+    "ventas",
+    "caja",
+    "reposición"
+   ],
+   "turnos": [
+    "tarde",
+    "fines de semana"
+   ],
+   "turnosExcl": true,
+   "perfil": "Vendedores con buena presencia y trato amable para la sección hogar y electrodomésticos. Asesoramiento en salón, cobro en caja y reposición de mercadería. Turno tarde con fines de semana rotativos.",
+   "pesos": {
+    "exp": 25,
+    "hab": 20,
+    "ing": 5,
+    "ubi": 35,
+    "ia": 15
+   },
+   "estado": "abierta",
+   "creado": "2026-10-20T14:15:00.000Z"
+  },
+  "p03": {
+   "codigo": "P-03",
+   "titulo": "Recepcionista",
+   "cliente": "Recepción · Casa central",
+   "tipo": "masiva",
+   "vacantes": 2,
+   "zona": "Centro",
+   "rubros": [
+    "atención al cliente",
+    "salud",
+    "administración"
+   ],
+   "expMin": 1,
+   "inglesMin": "ninguno",
+   "inglesExcl": false,
+   "habExcl": [
+    "atención telefónica"
+   ],
+   "habDes": [
+    "manejo de agenda",
+    "atención al cliente",
+    "Excel"
+   ],
+   "turnos": [
+    "mañana"
+   ],
+   "turnosExcl": true,
+   "perfil": "Recepcionista para casa central: recibir a proveedores y visitas, coordinar la agenda de reuniones de la gerencia y atender la central telefónica. Buscamos calidez, paciencia y orden.",
+   "pesos": {
+    "exp": 25,
+    "hab": 20,
+    "ing": 5,
+    "ubi": 35,
+    "ia": 15
+   },
+   "estado": "abierta",
+   "creado": "2026-10-20T14:15:00.000Z"
+  },
+  "p04": {
+   "codigo": "P-04",
+   "titulo": "Cajero/a de Supermercado",
+   "cliente": "Sucursal Malvín",
+   "tipo": "masiva",
+   "vacantes": 5,
+   "zona": "Malvín",
+   "rubros": [
+    "comercio y retail",
+    "atención al cliente"
+   ],
+   "expMin": 0,
+   "inglesMin": "ninguno",
+   "inglesExcl": false,
+   "habExcl": [
+    "caja"
+   ],
+   "habDes": [
+    "manejo de POS",
+    "atención al cliente",
+    "arqueo de caja"
+   ],
+   "turnos": [
+    "tarde",
+    "noche"
+   ],
+   "turnosExcl": true,
+   "perfil": "Cajeros responsables con el manejo de dinero y ágiles en horas pico. Cobro con POS, arqueo y cierre de caja. Turnos tarde y noche.",
+   "pesos": {
+    "exp": 25,
+    "hab": 20,
+    "ing": 5,
+    "ubi": 35,
+    "ia": 15
+   },
+   "estado": "abierta",
+   "creado": "2026-10-20T14:15:00.000Z"
+  },
+  "p05": {
+   "codigo": "P-05",
+   "titulo": "Auxiliar de Depósito",
+   "cliente": "Logística · Centro de distribución",
+   "tipo": "masiva",
+   "vacantes": 3,
+   "zona": "Aguada",
+   "rubros": [
+    "logística",
+    "comercio y retail"
+   ],
+   "expMin": 1,
+   "inglesMin": "ninguno",
+   "inglesExcl": false,
+   "habExcl": [],
+   "habDes": [
+    "control de stock",
+    "carga y descarga",
+    "manejo de autoelevador",
+    "Excel"
+   ],
+   "turnos": [
+    "mañana"
+   ],
+   "turnosExcl": true,
+   "perfil": "Auxiliares para el centro de distribución: recepción de mercadería, armado de pedidos para sucursales, control de stock y carga de camiones. Valoramos experiencia con autoelevador y compromiso con la seguridad.",
+   "pesos": {
+    "exp": 25,
+    "hab": 20,
+    "ing": 5,
+    "ubi": 35,
+    "ia": 15
+   },
+   "estado": "abierta",
+   "creado": "2026-10-20T14:15:00.000Z"
+  },
+  "p06": {
+   "codigo": "P-06",
+   "titulo": "Chofer de Reparto",
+   "cliente": "Logística · Envíos a domicilio",
+   "tipo": "masiva",
+   "vacantes": 2,
+   "zona": "La Blanqueada",
+   "rubros": [
+    "logística"
+   ],
+   "expMin": 2,
+   "inglesMin": "ninguno",
+   "inglesExcl": false,
+   "habExcl": [
+    "libreta de conducir"
+   ],
+   "habDes": [
+    "reparto",
+    "conocimiento de Montevideo",
+    "atención al cliente"
+   ],
+   "turnos": [
+    "mañana",
+    "tarde"
+   ],
+   "turnosExcl": false,
+   "perfil": "Choferes con libreta profesional para el reparto de compras online a domicilio dentro de Montevideo. Buscamos responsabilidad, puntualidad y buen trato con los clientes al entregar.",
+   "pesos": {
+    "exp": 30,
+    "hab": 25,
+    "ing": 0,
+    "ubi": 25,
+    "ia": 20
+   },
+   "estado": "abierta",
+   "creado": "2026-10-20T14:15:00.000Z"
+  },
+  "p07": {
+   "codigo": "P-07",
+   "titulo": "Operador/a de Atención Telefónica",
+   "cliente": "Atención al cliente · Pedidos telefónicos",
+   "tipo": "masiva",
+   "vacantes": 8,
+   "zona": "Tres Cruces",
+   "rubros": [
+    "atención al cliente",
+    "ventas",
+    "comercio y retail"
+   ],
+   "expMin": 0,
+   "inglesMin": "ninguno",
+   "inglesExcl": false,
+   "habExcl": [],
+   "habDes": [
+    "atención telefónica",
+    "atención al cliente",
+    "CRM",
+    "ventas"
+   ],
+   "turnos": [
+    "tarde"
+   ],
+   "turnosExcl": true,
+   "perfil": "Operadores para tomar pedidos telefónicos y gestionar consultas y reclamos de clientes de los supermercados. Buscamos buena dicción, paciencia y orientación a resolver. Turno tarde de 6 horas, ideal para estudiantes.",
+   "pesos": {
+    "exp": 25,
+    "hab": 20,
+    "ing": 5,
+    "ubi": 35,
+    "ia": 15
+   },
+   "estado": "abierta",
+   "creado": "2026-10-20T14:15:00.000Z"
+  }
+ },
+ "config": {
+  "empresa": {
+   "nombre": "Supermercados La Huerta"
+  }
+ }
+}

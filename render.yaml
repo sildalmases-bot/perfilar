@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: perfilar
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: ANTHROPIC_MODEL
+        value: claude-sonnet-5-5
+      - key: DATABASE_URL
+        fromDatabase:
+          name: perfilar-db
+          property: connectionString
+databases:
+  - name: perfilar-db
+    plan: free
