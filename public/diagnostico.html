@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Perfilar · Diagnóstico</title>
+<style>
+:root{--bg:#FBF6F3;--card:#fff;--ink:#2A2140;--muted:#6C6377;--line:#EBDDD8;--ok:#2E7D5B;--okb:#E0F1E8;--bad:#C0392B;--badb:#FBE2DE;--warn:#9A5B12;--warnb:#FCEEDA}
+@media (prefers-color-scheme:dark){:root{--bg:#17131F;--card:#211B2C;--ink:#F3ECF1;--muted:#ABA0B4;--line:#382F47;--ok:#6CC79A;--okb:#163428;--bad:#F2887B;--badb:#401C19;--warn:#EDB660;--warnb:#3A2B12;color-scheme:dark}}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;padding:32px max(16px,env(safe-area-inset-left,0px))}
+main{max-width:680px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+h1{font:600 30px Georgia,serif;margin:0}
+p{margin:0;color:var(--muted)}
+.row{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:flex;gap:14px;align-items:flex-start}
+.tag{flex:none;font-weight:700;font-size:12px;letter-spacing:.06em;text-transform:uppercase;padding:3px 9px;border-radius:5px;min-width:64px;text-align:center}
+.ok{background:var(--okb);color:var(--ok)}.bad{background:var(--badb);color:var(--bad)}.warn{background:var(--warnb);color:var(--warn)}.wait{background:var(--line);color:var(--muted)}
+.row b{display:block}.row span{color:var(--muted);font-size:14px;overflow-wrap:anywhere}
+a{color:inherit}
+</style>
+</head>
+<body>
+<main>
+  <h1>Diagnóstico de Perfilar</h1>
+  <p>Revisa si el servidor, la base de datos y la IA están bien configurados en Render. Si algo aparece en rojo, la explicación dice cómo arreglarlo.</p>
+  <div id="list"></div>
+  <p><a href="./">Volver a Perfilar</a></p>
+</main>
+<script>
+const items=[
+ ["srv","Servidor de Perfilar"],["shim","Archivo public/shim.js"],["db","Base de datos"],["key","Clave de la IA (ANTHROPIC_API_KEY)"],["ia","Prueba real de la IA"],["pdf","Lector de PDF"],["word","Lector de Word"]];
+const list=document.getElementById("list");
+list.innerHTML=items.map(([k,t])=>`<div class="row" id="r_${k}"><span class="tag wait">…</span><div><b>${t}</b><span>Revisando…</span></div></div>`).join("");
+function set(k,st,msg){const r=document.getElementById("r_"+k);const tag=r.querySelector(".tag");tag.className="tag "+st;tag.textContent=st==="ok"?"Bien":st==="bad"?"Error":"Aviso";r.querySelector("span:last-child").textContent=msg;}
+(async()=>{
+  fetch("shim.js",{method:"HEAD",cache:"no-store"}).then(r=>r.ok?set("shim","ok","Está en su lugar."):set("shim","bad","No se encuentra. shim.js tiene que estar dentro de la carpeta public, junto a index.html.")).catch(()=>set("shim","bad","No se pudo comprobar."));
+  for(const [k,url,name] of [["pdf","https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js","PDF"],["word","https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js","Word"]]){
+    const s=document.createElement("script");s.src=url;s.onload=()=>set(k,"ok","Se carga bien.");s.onerror=()=>set(k,"bad","Tu navegador no pudo cargar el lector de "+name+" desde cdnjs.cloudflare.com. Probá con otra red o desactivá el bloqueador de anuncios.");document.head.appendChild(s);}
+  let d;
+  try{const r=await fetch("api/diag",{cache:"no-store"});if(!r.ok)throw new Error("HTTP "+r.status);d=await r.json();set("srv","ok","Responde bien.");}
+  catch(e){set("srv","bad","No responde ("+e.message+"). En Render el servicio tiene que ser de tipo Web Service con Start Command npm start, no Static Site.");["db","key","ia"].forEach(k=>set(k,"bad","No se puede revisar sin servidor."));return;}
+  if(String(d.baseDeDatos).startsWith("error"))set("db","bad",d.baseDeDatos+". Revisá la variable DATABASE_URL.");
+  else if(d.baseDeDatos==="postgres")set("db","ok","Postgres conectada · "+d.registros+" registros guardados.");
+  else set("db","warn","Sin DATABASE_URL: los datos se guardan en un archivo que Render borra al reiniciar. Conectá una base Postgres.");
+  set("key",d.claveIA?"ok":"bad",d.claveIA?"Configurada. Modelo: "+d.modelo:"Falta. En Render → tu servicio → Environment, agregá ANTHROPIC_API_KEY y guardá. Sin esto, subir CV no lee el archivo.");
+  if(!d.claveIA)set("ia","bad","No se puede probar sin la clave.");
+  else if(d.pruebaIA==="OK")set("ia","ok","La IA respondió correctamente.");
+  else{let m=d.pruebaIA||"Sin respuesta";if(/credit balance/i.test(m))m="La cuenta de Anthropic no tiene crédito. Cargá crédito en platform.claude.com → Billing.";else if(/401|authentication|api key/i.test(m))m="La clave no es válida. Creá una nueva en platform.claude.com → API Keys y pegala en Render sin espacios.";else if(/model/i.test(m))m="El modelo "+d.modelo+" no está disponible. Borrá ANTHROPIC_MODEL o poné claude-sonnet-5-5.";set("ia","bad",m);}
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,1207 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px/1.4 system-ui,-apple-system,"Segoe UI",sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+<script src="shim.js"></script>
+</head>
+<body>
+<title>Perfilar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,600;1,6..72,500&family=Public+Sans:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: consultora formal sobre fondo claro y cálido. Azul acero como color principal; ciruela y terracota apagados solo para niveles; cada candidato se presenta como una ficha con nivel y cinco criterios. */
+:root{
+  --bg:#FBF6F3; --surface:#FFFFFF; --surface-2:#F4E9E6; --ink:#2A2140; --muted:#6C6377; --line:#EBDDD8;
+  --hero-bg:linear-gradient(120deg,#FCE5D9 0%,#F8D3CB 38%,#EBD3DE 70%,#D9E4EF 100%);
+  --hero-ink:#2A2140; --top-bg:rgba(255,255,255,.9); --brass:#8E4B7D; --brass-ink:#FFFFFF;
+  --brand:#2E6C98; --brand-ink:#FFFFFF; --brand-soft:#DDEAF3;
+  --hot:#BE4F6C; --hot-ink:#FFFFFF; --hot-soft:#F9E5EA;
+  --l4:#2E6C98; --l4s:#DDEAF3; --l3:#5E5B8F; --l3s:#E7E5F2; --l2:#B5573F; --l2s:#FBE5DC; --l1:#7A7385; --l1s:#EFEAEC;
+  --s1:#FCB79B; --s2:#F7838A; --s3:#E05C7A; --s4:#9C5C86; --s5:#5E5B8F; --s6:#2E6C98;
+  --good:#2E7D5B; --good-soft:#E0F1E8; --warn:#9A5B12; --warn-soft:#FCEEDA; --bad:#C0392B; --bad-soft:#FBE2DE;
+  --scrim:rgba(42,33,64,.42); --shadow:0 1px 2px rgba(42,33,64,.06),0 12px 30px rgba(42,33,64,.12);
+  --f-display:"Newsreader",Georgia,"Times New Roman",serif;
+  --f-body:"Public Sans","Segoe UI",system-ui,-apple-system,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#17131F; --surface:#211B2C; --surface-2:#2B2438; --ink:#F3ECF1; --muted:#ABA0B4; --line:#382F47;
+  --hero-bg:linear-gradient(120deg,#33242C 0%,#33233A 45%,#272640 75%,#1E2E42 100%);
+  --hero-ink:#F7EFF2; --top-bg:rgba(23,19,31,.9); --brass:#B1ACDD; --brass-ink:#2A2140;
+  --brand:#7FB3D9; --brand-ink:#14202B; --brand-soft:#1E3346;
+  --hot:#E39AB0; --hot-ink:#2A1018; --hot-soft:#3A2230;
+  --l4:#8DC0E3; --l4s:#1E3346; --l3:#B1ACDD; --l3s:#2D2A48; --l2:#F2A487; --l2s:#3D271F; --l1:#A79FB0; --l1s:#2B2438;
+  --s1:#FCB79B; --s2:#F7838A; --s3:#E05C7A; --s4:#B9779F; --s5:#8A86C0; --s6:#5B9AC6;
+  --good:#6CC79A; --good-soft:#163428; --warn:#EDB660; --warn-soft:#3A2B12; --bad:#F2887B; --bad-soft:#401C19;
+  --scrim:rgba(0,0,0,.58); --shadow:0 1px 2px rgba(0,0,0,.4),0 12px 30px rgba(0,0,0,.45);
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#17131F; --surface:#211B2C; --surface-2:#2B2438; --ink:#F3ECF1; --muted:#ABA0B4; --line:#382F47;
+  --hero-bg:linear-gradient(120deg,#33242C 0%,#33233A 45%,#272640 75%,#1E2E42 100%);
+  --hero-ink:#F7EFF2; --top-bg:rgba(23,19,31,.9); --brass:#B1ACDD; --brass-ink:#2A2140;
+  --brand:#7FB3D9; --brand-ink:#14202B; --brand-soft:#1E3346;
+  --hot:#E39AB0; --hot-ink:#2A1018; --hot-soft:#3A2230;
+  --l4:#8DC0E3; --l4s:#1E3346; --l3:#B1ACDD; --l3s:#2D2A48; --l2:#F2A487; --l2s:#3D271F; --l1:#A79FB0; --l1s:#2B2438;
+  --s1:#FCB79B; --s2:#F7838A; --s3:#E05C7A; --s4:#B9779F; --s5:#8A86C0; --s6:#5B9AC6;
+  --good:#6CC79A; --good-soft:#163428; --warn:#EDB660; --warn-soft:#3A2B12; --bad:#F2887B; --bad-soft:#401C19;
+  --scrim:rgba(0,0,0,.58); --shadow:0 1px 2px rgba(0,0,0,.4),0 12px 30px rgba(0,0,0,.45);
+  color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.55}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--surface)}
+h1,h2,h3,h4{font-family:var(--f-display);font-weight:600;line-height:1.12;text-wrap:balance;margin:0;letter-spacing:-.01em}
+h1{font-size:clamp(32px,4vw,42px)} h2{font-size:25px} h3{font-size:19px} h4{font-size:16px}
+p{margin:0}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+.mono,.num{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+.small{font-size:13px}
+.lbl{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600}
+
+/* Barra superior */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--top-bg);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);color:var(--ink);border-bottom:1px solid var(--line)}
+.top-in{max-width:1280px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:12px;display:flex;align-items:center;gap:22px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:11px;text-decoration:none;color:inherit}
+.brand b{font-family:var(--f-display);font-size:25px;font-weight:600;letter-spacing:-.01em;line-height:1}
+.brand small{display:block;font-size:10.5px;opacity:.7;letter-spacing:.14em;text-transform:uppercase;font-weight:500;margin-top:3px}
+.mark{display:inline-flex;align-items:flex-end;gap:2px;height:30px;padding:5px;border-radius:5px;background:var(--surface);border:1px solid var(--line)}
+.mark i{width:3px;border-radius:1px}
+.mark i:nth-child(1){background:var(--s1)}.mark i:nth-child(2){background:var(--s3)}.mark i:nth-child(3){background:var(--s4)}.mark i:nth-child(4){background:var(--s5)}.mark i:nth-child(5){background:var(--s6)}
+.nav{display:flex;gap:2px;overflow-x:auto;flex:1 1 auto;min-width:0;scrollbar-width:none}
+.nav::-webkit-scrollbar{display:none}
+.tab{border:0;background:none;padding:9px 13px;cursor:pointer;color:var(--ink);opacity:.68;font-weight:500;white-space:nowrap;border-bottom:2px solid transparent;border-radius:0}
+.tab:hover{opacity:1}
+.tab[aria-selected="true"]{opacity:1;border-bottom-color:var(--brand);font-weight:600}
+.tools{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.toggle{display:inline-flex;align-items:center;gap:8px;cursor:pointer;font-size:13.5px;font-weight:500;user-select:none}
+.toggle input{appearance:none;width:36px;height:20px;border-radius:999px;background:var(--surface-2);border:1px solid var(--line);position:relative;cursor:pointer;margin:0;transition:background .15s}
+.toggle input::after{content:"";position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;background:var(--muted);transition:transform .15s}
+.toggle input:checked{background:var(--brand);border-color:var(--brand)} .toggle input:checked::after{background:#FFFFFF}
+.toggle input:checked::after{transform:translateX(16px)}
+.job{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:500;background:var(--hot-soft);color:var(--ink);padding:4px 6px 4px 12px;border-radius:999px}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--hot);animation:pulse 1.2s infinite}
+@keyframes pulse{50%{opacity:.25}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* Portada */
+.hero{background:var(--hero-bg);color:var(--hero-ink);position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:linear-gradient(90deg,var(--s1) 0 16.66%,var(--s2) 0 33.33%,var(--s3) 0 50%,var(--s4) 0 66.66%,var(--s5) 0 83.33%,var(--s6) 0)}
+.hero-in{position:relative;max-width:1280px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:40px 48px;display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:48px;align-items:center}
+@media (max-width:900px){.hero-in{grid-template-columns:minmax(0,1fr);gap:30px}}
+.hero h1{font-size:clamp(38px,5.4vw,64px);line-height:1.04;font-weight:500;letter-spacing:-.015em}
+.hero h1 em{font-style:italic;color:var(--brass)}
+.hero p.lead{font-size:16.5px;opacity:.86;max-width:54ch;margin-top:18px}
+.hstats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px;margin-top:30px;padding-top:22px;border-top:1px solid color-mix(in srgb,var(--hero-ink) 18%,transparent)}
+@media (max-width:560px){.hstats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.hstat .v{font-family:var(--f-display);font-weight:500;font-size:46px;line-height:1;font-variant-numeric:lining-nums tabular-nums}
+.hstat .l{font-size:11px;letter-spacing:.11em;text-transform:uppercase;opacity:.7;font-weight:500;margin-top:8px}
+.hero .row{margin-top:24px}
+.hero .btn{border-color:transparent}
+.hero .btn.light{background:var(--surface);color:var(--ink);border:1px solid transparent}
+.hero .btn.light:hover{border-color:var(--ink)}
+.hero .btn.gold{background:var(--brand);color:var(--brand-ink)}
+.showcase{display:flex;flex-direction:column;gap:12px;max-width:390px;justify-self:end;width:100%}
+@media (max-width:900px){.showcase{justify-self:start}}
+.showcase .lbl{color:var(--hero-ink);opacity:.75}
+.showcase .scout{box-shadow:0 18px 40px rgba(42,33,64,.15)}
+
+.hero.ops .hero-in{grid-template-columns:minmax(0,1fr);gap:26px;padding-block:28px 32px}
+.hero.ops h1{font-size:clamp(32px,4.4vw,48px)}
+.hero.ops .hstats{grid-template-columns:repeat(5,minmax(0,1fr));margin-top:0}
+@media (max-width:760px){.hero.ops .hstats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.hstat .v small{font-size:22px}
+.flow{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:0;counter-reset:f}
+.flow li{position:relative;display:flex;flex-direction:column;gap:4px;padding:14px 18px 14px 16px;background:var(--bg);border:1px solid var(--line);margin-right:-1px}
+.flow li:first-child{border-radius:8px 0 0 8px}.flow li:last-child{border-radius:0 8px 8px 0}
+.flow li:not(:last-child)::after{content:"";position:absolute;right:-8px;top:50%;width:14px;height:14px;background:var(--bg);border-top:1px solid var(--line);border-right:1px solid var(--line);transform:translateY(-50%) rotate(45deg);z-index:1}
+.flow b{font-family:var(--f-display);font-weight:500;font-size:34px;line-height:1;color:var(--brand)}
+.flow .ft{font-weight:600;font-size:14px}
+@media (max-width:980px){.flow{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.flow li{border-radius:8px!important;margin:0}.flow li::after{display:none}}
+@media (max-width:520px){.flow{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.tasks,.log{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.tasks li{display:flex;align-items:center;gap:12px;padding:11px 0;border-top:1px solid var(--line);font-size:14px}
+.tasks li:first-child{border-top:0;padding-top:0}
+.tasks li > span:nth-child(2){flex:1;min-width:0}
+.tdot{width:8px;height:8px;border-radius:50%;background:var(--brand);flex:none}
+.tdot.ia{background:var(--hot)}.tdot.warn{background:var(--l2)}
+.log li{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-top:1px solid var(--line);font-size:13.5px}
+.log li:first-child{border-top:0;padding-top:0}
+.log li > span:first-child{min-width:0}
+.log li.click{cursor:pointer}.log li.click:hover span:first-child{color:var(--brand)}
+.log .muted{white-space:nowrap}
+
+.emp{color:var(--ink);max-width:260px;overflow:hidden;text-overflow:ellipsis}
+.emp .lbl{margin-right:4px}
+
+/* Estructura */
+.wrap{max-width:1280px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:30px 64px;display:flex;flex-direction:column;gap:26px}
+.head{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;flex-wrap:wrap;padding-bottom:18px;border-bottom:1px solid var(--line)}
+.head p{color:var(--muted);max-width:66ch;margin-top:8px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px}
+.pad{padding:20px}
+.stack{display:flex;flex-direction:column;gap:12px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.between{justify-content:space-between}
+.banner{border-radius:8px;padding:12px 16px;background:var(--warn-soft);font-size:14px;border-left:3px solid var(--warn)}
+.banner.info{background:var(--hot-soft);border-left-color:var(--hot)}
+
+/* Botones */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid var(--line);background:var(--surface);padding:9px 16px;border-radius:6px;cursor:pointer;font-weight:600;font-size:14px;white-space:nowrap}
+.btn:hover{border-color:var(--muted)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.pri{background:var(--brand);color:var(--brand-ink);border-color:var(--brand)}
+.btn.pri:hover,.btn.ia:hover{filter:brightness(1.07)}
+.btn.ia{background:var(--hot);color:var(--hot-ink);border-color:var(--hot)}
+.btn.ia::before{content:"";width:6px;height:6px;background:currentColor;transform:rotate(45deg)}
+.btn.ghost{background:none;border-color:transparent}
+.btn.ghost:hover{background:var(--surface-2)}
+.btn.danger{color:var(--bad)} .btn.danger.armed{background:var(--bad);color:#FFFFFF;border-color:var(--bad)}
+.btn.sm{padding:5px 11px;font-size:13px}
+.linkbtn{background:none;border:0;padding:0;color:var(--brand);cursor:pointer;font-weight:600;text-decoration:underline;text-underline-offset:3px}
+
+/* Chips y puntajes */
+.chip{display:inline-flex;align-items:center;gap:5px;padding:2px 9px;border-radius:4px;font-size:12.5px;font-weight:500;background:var(--surface-2);color:var(--ink);white-space:nowrap}
+.chip.acc{background:var(--brand-soft);color:var(--brand)}
+.chip.good{background:var(--good-soft);color:var(--good)}
+.chip.bad{background:var(--bad-soft);color:var(--bad)}
+.chip.warn{background:var(--warn-soft);color:var(--warn)}
+.chip.iac{background:var(--hot-soft);color:var(--hot)}
+.chip.line{background:none;border:1px solid var(--line);color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.sc{display:inline-flex;align-items:baseline;justify-content:center;min-width:48px;padding:3px 9px;border-radius:5px;font-family:var(--f-mono);font-weight:500;font-size:16px;font-variant-numeric:tabular-nums}
+.sc small{font-size:11px;margin-left:1px}
+.sc[data-b="4"]{background:var(--l4);color:var(--surface)}
+.sc[data-b="3"]{background:var(--l3s);color:var(--l3);box-shadow:inset 0 0 0 1px var(--l3)}
+.sc[data-b="2"]{background:var(--l2s);color:var(--l2);box-shadow:inset 0 0 0 1px var(--l2)}
+.sc[data-b="1"]{background:var(--l1s);color:var(--muted)}
+.sc[data-b="0"]{background:var(--bad-soft);color:var(--bad);font-size:13px;font-family:var(--f-body);font-weight:600}
+.huella{display:inline-flex;align-items:flex-end;gap:3px;height:26px;vertical-align:middle}
+.huella i{width:7px;height:100%;background:var(--surface-2);position:relative;overflow:hidden}
+.huella i::after{content:"";position:absolute;left:0;right:0;bottom:0;height:var(--h);background:var(--brand)}
+.huella i.ia::after{background:var(--hot)}
+.huella i.na{background:repeating-linear-gradient(135deg,var(--surface-2) 0 3px,transparent 3px 6px);outline:1px dashed var(--line);outline-offset:-1px}
+.huella.off i::after{background:var(--muted);opacity:.4}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12.5px;color:var(--muted);align-items:center}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:10px;height:10px;background:var(--brand)}
+.legend i.ia{background:var(--hot)}
+
+/* Ficha de candidato */
+.scout{--tier:var(--l1);--tier-2:var(--l1s);display:flex;flex-direction:column;gap:14px;padding:18px 18px 16px;border-radius:10px;border:1px solid var(--line);border-top:4px solid var(--tier);
+  background:var(--surface);color:var(--ink);text-align:left;cursor:pointer;width:100%;font:inherit;transition:box-shadow .15s,border-color .15s}
+.scout:hover{box-shadow:var(--shadow);border-color:var(--muted);border-top-color:var(--tier)}
+.scout[data-t="4"]{--tier:var(--l4);--tier-2:var(--l4s)}
+.scout[data-t="3"]{--tier:var(--l3);--tier-2:var(--l3s)}
+.scout[data-t="2"]{--tier:var(--l2);--tier-2:var(--l2s)}
+.scout[data-t="0"]{opacity:.85}
+.sc-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.sc-num{font-family:var(--f-display);font-weight:500;font-size:54px;line-height:.9;color:var(--tier);font-variant-numeric:lining-nums tabular-nums}
+.scout[data-t="1"] .sc-num{color:var(--ink)}
+.sc-num.dash{color:var(--muted);font-size:42px}
+.sc-pos{display:block;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:9px;max-width:24ch}
+.sc-tier{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:4px 9px;border-radius:4px;background:var(--tier-2);color:var(--tier)}
+.scout[data-t="1"] .sc-tier,.scout[data-t="0"] .sc-tier{color:var(--muted)}
+.sc-name{font-family:var(--f-display);font-weight:600;font-size:23px;line-height:1.1}
+.sc-meta{font-size:12.5px;color:var(--muted);margin-top:4px}
+.sc-stats{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));border-top:1px solid var(--line);padding-top:12px;text-align:center}
+.sc-stats div{display:flex;flex-direction:column;gap:3px;border-left:1px solid var(--line)}
+.sc-stats div:first-child{border-left:0}
+.sc-stats b{font-family:var(--f-mono);font-weight:500;font-size:17px;line-height:1;font-variant-numeric:tabular-nums}
+.sc-stats span{font-size:9.5px;letter-spacing:.1em;color:var(--muted);font-weight:600}
+.sc-stats .ia b{color:var(--hot)}
+.sc-foot{font-size:12.5px;color:var(--muted)}
+
+/* Panel */
+.cols{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:22px;align-items:start}
+@media (max-width:960px){.cols{grid-template-columns:minmax(0,1fr)}}
+.plist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+@media (max-width:640px){.plist{grid-template-columns:minmax(0,1fr)}}
+.pcard{padding:18px;display:flex;flex-direction:column;gap:14px;cursor:pointer;text-align:left;width:100%;font:inherit;color:inherit;transition:border-color .15s,box-shadow .15s}
+.pcard:hover{border-color:var(--brand);box-shadow:var(--shadow)}
+.mini{display:flex;flex-direction:column;gap:8px;border-top:1px solid var(--line);padding-top:12px}
+.mini div{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:14px}
+.mini span:first-child{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.funnel{display:flex;flex-direction:column;gap:9px}
+.funnel .fr{display:grid;grid-template-columns:150px minmax(0,1fr) 30px;gap:10px;align-items:center;font-size:13.5px}
+.funnel .bar{height:8px;border-radius:4px;background:var(--surface-2);overflow:hidden}
+.funnel .bar i{display:block;height:100%;background:var(--brand);border-radius:4px}
+.sug{display:flex;flex-direction:column;gap:5px;padding:14px 0;border-top:1px solid var(--line)}
+.sug:first-child{border-top:0;padding-top:0}
+.tilt{border-top:3px solid var(--brand)}
+
+/* Vacantes */
+.split{display:grid;grid-template-columns:290px minmax(0,1fr);gap:22px;align-items:start}
+@media (max-width:900px){.split{grid-template-columns:minmax(0,1fr)}}
+.side{display:flex;flex-direction:column;gap:8px}
+.sitem{display:flex;flex-direction:column;gap:6px;padding:13px 15px;border-radius:8px;border:1px solid var(--line);background:var(--surface);cursor:pointer;text-align:left;width:100%}
+.sitem:hover{border-color:var(--muted)}
+.sitem[aria-current="true"]{border-color:var(--brand);background:var(--brand-soft);box-shadow:inset 3px 0 0 var(--brand)}
+.sitem.closed{opacity:.6}
+.sitem b{font-family:var(--f-display);font-size:18px;font-weight:600}
+.podium{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+@media (max-width:760px){.podium{grid-template-columns:minmax(0,1fr)}}
+.req{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px 24px;padding-top:16px;border-top:1px solid var(--line)}
+.req > div{display:flex;flex-direction:column;gap:6px;min-width:0}
+.wbar{display:flex;height:10px;border-radius:3px;overflow:hidden;gap:2px}
+.wbar i{display:block;height:100%;background:var(--brand)}
+.wbar i:nth-child(2){opacity:.8}.wbar i:nth-child(3){opacity:.6}.wbar i:nth-child(4){opacity:.42}
+.wbar i.ia{background:var(--hot)}
+.wlab{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:12.5px;color:var(--muted)}
+.wlab b{color:var(--ink);font-family:var(--f-mono);font-weight:500}
+
+.tblwrap{overflow-x:auto}
+.tbl{width:100%;border-collapse:collapse;font-size:14px}
+.tbl th{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600;text-align:left;padding:11px 14px;border-bottom:1px solid var(--line);white-space:nowrap;background:var(--bg)}
+.tbl td{padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:middle}
+.tbl tbody tr:last-child td{border-bottom:0}
+.tbl tr.click{cursor:pointer}
+.tbl tr.click:hover td{background:var(--bg)}
+.tbl .rk{font-family:var(--f-display);font-weight:500;font-size:19px;color:var(--muted);width:40px}
+.who{font-weight:600}
+.who + .small{color:var(--muted)}
+.tbl select{border:1px solid var(--line);background:var(--surface);border-radius:5px;padding:5px 7px;font-size:13px}
+.grp{padding:12px 16px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+
+/* Banco */
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.search{flex:1 1 240px;min-width:0;border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:10px 14px}
+.cgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px}
+
+/* Matriz */
+.mx td,.mx th{text-align:center}
+.mx td:first-child,.mx th:first-child{text-align:left;position:sticky;left:0;background:var(--surface);z-index:1}
+.mx th:first-child{background:var(--bg)}
+.mx th{white-space:normal;min-width:120px;vertical-align:bottom}
+.mx th small{display:block;text-transform:none;letter-spacing:0;font-weight:400}
+.cell{border:0;background:none;cursor:pointer;padding:2px;border-radius:6px}
+.cell.top .sc{outline:2px solid var(--ink);outline-offset:2px}
+
+/* Metodología */
+.prose{max-width:74ch;display:flex;flex-direction:column;gap:12px}
+.prose ul{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px}
+.formula{font-family:var(--f-mono);font-size:13px;background:var(--surface-2);border-radius:6px;padding:14px 16px;overflow-x:auto;white-space:pre}
+.mgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.step{position:relative;overflow:hidden;border-top:3px solid var(--brand)}
+.step.ia{border-top-color:var(--hot)}
+.step .n{font-family:var(--f-display);font-weight:500;font-size:44px;line-height:1;color:var(--muted);opacity:.35;position:absolute;right:16px;top:12px}
+
+/* Drawer y modal */
+#drawer{position:fixed;inset:0;z-index:40}
+.scrim{position:absolute;inset:0;background:var(--scrim)}
+.panel{position:absolute;top:0;right:0;bottom:0;width:min(640px,100%);background:var(--bg);box-shadow:var(--shadow);display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);padding-right:env(safe-area-inset-right,0px)}
+.panel-h{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:20px 22px;background:var(--hero-bg);color:var(--hero-ink);border-bottom:1px solid var(--line)}
+.panel-h .lbl,.panel-h .muted{color:var(--hero-ink);opacity:.8}
+.panel-h h2{font-size:30px;font-weight:500}
+.panel-h .x{background:color-mix(in srgb,var(--surface) 70%,transparent);color:var(--ink)}
+.panel-b{overflow-y:auto;padding:20px 22px 44px;display:flex;flex-direction:column;gap:18px}
+.x{border:0;background:var(--surface-2);width:34px;height:34px;border-radius:6px;cursor:pointer;font-size:19px;line-height:1;flex:none}
+.big{display:flex;align-items:center;gap:16px}
+.big .sc{font-size:34px;padding:8px 14px;min-width:92px;border-radius:8px}
+.checks{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:7px;font-size:14px}
+.checks li{display:flex;gap:9px;align-items:baseline}
+.ok{color:var(--good);font-weight:700} .no{color:var(--bad);font-weight:700}
+.calc td:nth-child(n+3),.calc th:nth-child(n+3){text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.calc tfoot td{font-weight:700;border-top:2px solid var(--ink);border-bottom:0}
+.calc tfoot td:last-child{font-size:18px}
+.calc .det{font-size:12.5px;color:var(--muted)}
+.iabox{background:var(--hot-soft);border-radius:8px;padding:16px 18px;display:flex;flex-direction:column;gap:10px;border-left:3px solid var(--hot)}
+.iabox ul{margin:0;padding-left:18px}
+.qlist{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:10px}
+
+#modal{position:fixed;inset:0;z-index:50;display:flex;align-items:flex-start;justify-content:center;padding:max(24px,env(safe-area-inset-top,0px)) max(12px,env(safe-area-inset-right,0px)) max(24px,env(safe-area-inset-bottom,0px)) max(12px,env(safe-area-inset-left,0px));overflow-y:auto}
+#modal[hidden]{display:none!important}
+.dlg{position:relative;background:var(--surface);border-radius:12px;box-shadow:var(--shadow);width:min(760px,100%);display:flex;flex-direction:column;overflow:hidden}
+.dlg-h{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:18px 22px;background:var(--hero-bg);color:var(--hero-ink);border-bottom:1px solid var(--line)}
+.dlg-h h2{font-size:26px;font-weight:500}
+.dlg-h .x{background:color-mix(in srgb,var(--surface) 70%,transparent);color:var(--ink)}
+.dlg-b{padding:20px 22px;display:flex;flex-direction:column;gap:16px}
+.dlg-f{padding:14px 22px;border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap;align-items:center}
+.fg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.fg .full{grid-column:1/-1}
+@media (max-width:600px){.fg{grid-template-columns:minmax(0,1fr)}}
+.field{display:flex;flex-direction:column;gap:5px;min-width:0}
+.field > label,.field > .lab{font-size:13px;font-weight:600}
+.field .hint{font-size:12.5px;color:var(--muted)}
+input[type=text],input[type=number],select,textarea{width:100%;border:1px solid var(--line);background:var(--bg);border-radius:6px;padding:9px 11px}
+textarea{resize:vertical;min-height:80px;line-height:1.45}
+.checkrow{display:flex;flex-wrap:wrap;gap:6px}
+.checkrow label{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:5px;padding:4px 11px;font-size:13px;cursor:pointer;background:var(--bg)}
+.checkrow label:has(input:checked){background:var(--brand-soft);border-color:var(--brand);color:var(--brand)}
+.checkrow input{accent-color:var(--brand);margin:0}
+.exprow{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1.1fr) minmax(0,1.1fr) 76px 34px;gap:8px;align-items:center}
+@media (max-width:600px){.exprow{grid-template-columns:minmax(0,1fr) minmax(0,1fr);padding-bottom:10px;border-bottom:1px dashed var(--line)}}
+.wgrid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+@media (max-width:600px){.wgrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.err{color:var(--bad);font-size:13.5px;font-weight:500}
+.drop{position:relative;border:1.5px dashed var(--line);border-radius:10px;padding:14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:var(--bg)}
+.drop.over{border-color:var(--brand);background:var(--brand-soft)}
+.drop.big{flex-direction:column;justify-content:center;text-align:center;gap:12px;padding:44px 20px;cursor:pointer;min-height:270px}
+.drop.big:hover{border-color:var(--brand)}
+.drop.big input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.drop.big:focus-within{outline:2px solid var(--brand);outline-offset:2px}
+.drop.big h3{font-size:24px}
+.drop.busy{cursor:progress;border-style:solid;border-color:var(--hot);background:var(--hot-soft)}
+.drop.busy .mark{animation:pulse 1.2s infinite}
+.mark.lg{height:52px;padding:8px;gap:4px}.mark.lg i{width:6px}
+.report{font-size:14.5px;line-height:1.65;display:flex;flex-direction:column;gap:8px;max-width:68ch}
+.report h3{margin-top:12px}
+.report ul{margin:0;padding-left:20px}
+.empty{padding:40px 20px;text-align:center;display:flex;flex-direction:column;gap:10px;align-items:center;color:var(--muted)}
+.empty h3{color:var(--ink)}
+
+#toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:60;background:var(--ink);color:var(--bg);padding:11px 18px;border-radius:8px;font-size:14px;max-width:calc(100% - 32px);box-shadow:var(--shadow);border-left:3px solid var(--brand)}
+</style>
+
+<header class="top">
+  <div class="top-in">
+    <a class="brand" href="#panel" data-act="go" data-v="panel" aria-label="Perfilar, ir al panel">
+      <span class="mark" aria-hidden="true"><i style="height:60%"></i><i style="height:100%"></i><i style="height:45%"></i><i style="height:80%"></i><i style="height:65%"></i></span>
+      <span><b>Perfilar</b><small>Back office de selección</small></span>
+    </a>
+    <nav class="nav" id="nav" aria-label="Secciones"></nav>
+    <div class="tools">
+      <span id="job"></span>
+      <button class="btn sm ghost emp" id="emp" data-act="empresa" title="Configurar la empresa"></button>
+      <label class="toggle" title="Oculta nombres y muestra solo el código del candidato"><input type="checkbox" id="ciego"> Modo ciego</label>
+    </div>
+  </div>
+</header>
+<main id="main"></main>
+<div id="drawer" hidden><div class="scrim" data-act="closeDrawer"></div><section class="panel" role="dialog" aria-modal="true" aria-labelledby="dTitle" id="drawerPanel"></section></div>
+<div id="modal" hidden></div>
+<div id="toast" hidden role="status"></div>
+
+<script>
+/*CORE*/
+const BARRIOS=["Aguada","Barrio Sur","Buceo","Carrasco","Centro","Ciudad Vieja","Cordón","La Blanqueada","Malvín","Palermo","Parque Batlle","Parque Rodó","Pocitos","Prado","Punta Carretas","Punta Gorda","Tres Cruces","Unión","Otro"];
+const ADJ_PAIRS=[["Pocitos","Punta Carretas"],["Pocitos","Buceo"],["Pocitos","Parque Batlle"],["Punta Carretas","Parque Rodó"],["Parque Rodó","Cordón"],["Parque Rodó","Palermo"],["Cordón","Centro"],["Cordón","Tres Cruces"],["Cordón","Palermo"],["Centro","Ciudad Vieja"],["Centro","Barrio Sur"],["Centro","Aguada"],["Centro","Palermo"],["Barrio Sur","Palermo"],["Tres Cruces","La Blanqueada"],["Tres Cruces","Parque Batlle"],["La Blanqueada","Parque Batlle"],["La Blanqueada","Unión"],["Parque Batlle","Buceo"],["Buceo","Malvín"],["Buceo","Unión"],["Malvín","Punta Gorda"],["Malvín","Unión"],["Punta Gorda","Carrasco"],["Aguada","Prado"]];
+const ADJ={};for(const [a,b] of ADJ_PAIRS){(ADJ[a]=ADJ[a]||[]).push(b);(ADJ[b]=ADJ[b]||[]).push(a);}
+const RUBROS=["tecnología","datos y analítica","producto","diseño","marketing","ventas","atención al cliente","finanzas y contabilidad","recursos humanos","administración","logística","comercio y retail","gastronomía","educación","salud","otro"];
+const TURNOS=["mañana","tarde","noche","fines de semana"];
+const ING=["ninguno","basico","intermedio","avanzado","nativo"];
+const INGL={ninguno:"Ninguno",basico:"Básico",intermedio:"Intermedio",avanzado:"Avanzado",nativo:"Nativo"};
+const CRIT=[["exp","Experiencia"],["hab","Habilidades"],["ing","Inglés"],["ubi","Ubicación y horarios"],["ia","Ajuste al perfil (IA)"]];
+const PESOS_DEF={masiva:{exp:25,hab:20,ing:5,ubi:35,ia:15},especializada:{exp:25,hab:35,ing:15,ubi:5,ia:20}};
+
+const norm=s=>String(s==null?"":s).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").trim();
+function stable(v){if(Array.isArray(v))return "["+v.map(stable).join(",")+"]";if(v&&typeof v==="object")return "{"+Object.keys(v).sort().map(k=>JSON.stringify(k)+":"+stable(v[k])).join(",")+"}";return JSON.stringify(v===undefined?null:v);}
+function hash(s){let h=0x811c9dc5;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,0x01000193)>>>0;}return h.toString(16).padStart(8,"0");}
+const firma=(c,p)=>hash(stable({t:p.titulo||"",pf:p.perfil||"",f:c.ficha||{}}));
+const pairKey=(cid,pid)=>cid+"__"+pid;
+const ingIdx=v=>{const i=ING.indexOf(norm(v));return i<0?0:i;};
+function skillMatch(list,s){const n=norm(s);if(!n)return false;return (list||[]).some(x=>{const m=norm(x);return m===n||(n.length>=3&&m.includes(n))||(m.length>=3&&n.includes(m));});}
+const r1=x=>Math.round(x*10)/10;
+
+/* Calcula el encaje de un candidato (c) con un puesto (p). ev = evaluación IA guardada o null. */
+function computeMatch(c,p,ev){
+  const f=c.ficha||{}, w=p.pesos||PESOS_DEF[p.tipo]||PESOS_DEF.masiva;
+  const rubros=p.rubros||[];
+  const exps=f.experiencias||[];
+  const rel=r1(exps.filter(e=>rubros.includes(e.rubro)).reduce((a,e)=>a+(+e.anos||0),0));
+  const min=+p.expMin||0;
+  const exp=Math.round(min===0?Math.min(100,50+rel*12.5):rel>=min?Math.min(100,70+30*(rel-min)/min):70*rel/min);
+  const habs=f.habilidades||[];
+  const excl=(p.habExcl||[]).map(s=>({s,ok:skillMatch(habs,s)}));
+  const des=(p.habDes||[]).map(s=>({s,ok:skillMatch(habs,s)}));
+  const all=excl.concat(des), matched=all.filter(x=>x.ok).length;
+  const hab=all.length?Math.round(100*matched/all.length):100;
+  const ci=ingIdx(f.ingles), ri=ingIdx(p.inglesMin);
+  const ing=ri===0?100:Math.round(Math.min(100,100*ci/ri));
+  let zonaPts, zonaTxt;
+  if(!p.zona||p.zona==="Remoto"){zonaPts=50;zonaTxt="Puesto remoto";}
+  else if(f.zona===p.zona){zonaPts=50;zonaTxt="Vive en el mismo barrio";}
+  else if((ADJ[p.zona]||[]).includes(f.zona)){zonaPts=35;zonaTxt="Barrio vecino ("+f.zona+")";}
+  else {zonaPts=15;zonaTxt="Barrio lejano ("+(f.zona||"sin dato")+")";}
+  const req=p.turnos||[], disp=f.disponibilidad||[];
+  const cubre=req.filter(t=>disp.includes(t)), faltaT=req.filter(t=>!disp.includes(t));
+  const turnPts=req.length?Math.round(50*cubre.length/req.length):50;
+  const ubi=zonaPts+turnPts;
+  const motivos=[];
+  excl.filter(x=>!x.ok).forEach(x=>motivos.push("No tiene "+x.s+" (excluyente)"));
+  if(p.inglesExcl&&ci<ri)motivos.push("Inglés "+INGL[ING[ci]]+", se pide "+INGL[ING[ri]]);
+  if(p.turnosExcl&&faltaT.length)motivos.push("No cubre "+faltaT.join(" y "));
+  const ia=ev&&ev.puntaje?Math.round(ev.puntaje*10):null;
+  const sub={exp,hab,ing,ubi,ia};
+  let sw=0,ss=0;for(const [k] of CRIT){if(sub[k]==null)continue;sw+=w[k]||0;ss+=(w[k]||0)*sub[k];}
+  const total=sw?Math.round(ss/sw):0;
+  return {apto:motivos.length===0,motivos,sub,w,total,provisional:ia==null,
+    det:{rel,min,rubros,excl,des,matched,allN:all.length,ci,ri,zonaPts,zonaTxt,turnPts,req,cubre,faltaT}};
+}
+const band=t=>t>=80?4:t>=65?3:t>=50?2:1;
+const BANDL={4:"Excelente",3:"Bueno",2:"Aceptable",1:"Bajo"};
+/*ENDCORE*/
+
+const VIEWS={panel:"Operaciones",busquedas:"Vacantes",banco:"Banco de CVs",matriz:"Matriz",metodo:"Cómo calcula"};
+const ETAPAS=[["nuevo","Nuevo"],["preseleccionado","Preseleccionado"],["entrevista","Entrevista"],["presentado","Presentado al área"],["contratado","Contratado"],["descartado","Descartado"]];
+const ETL=Object.fromEntries(ETAPAS);
+const PDFJS="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/";
+
+const S={puestos:[],cands:[],evals:{},pipe:{},view:"panel",sel:null,q:"",ciego:false,db:null,ai:null,aiImg:false,
+  got:{p:false,c:false,e:false,k:false},dbState:"cargando",readonly:false,drawer:null,showNo:false,modal:null};
+let JOB=null;
+
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const ready=()=>S.dbState!=="ok"||(S.got.p&&S.got.c&&S.got.e&&S.got.k);
+const P=id=>S.puestos.find(p=>p.id===id);
+const empresa=()=>(S.empresa&&S.empresa.nombre)||"tu empresa";
+const C=id=>S.cands.find(c=>c.id===id);
+const nameOf=c=>!c?"—":(S.ciego?"Candidato "+(c.codigo||""):(c.ficha&&c.ficha.nombre)||c.codigo||"Sin nombre");
+const openPuestos=()=>sortP(S.puestos.filter(p=>p.estado!=="cerrada"));
+function sortP(a){return a.slice().sort((x,y)=>(x.estado==="cerrada")-(y.estado==="cerrada")||String(x.codigo).localeCompare(String(y.codigo)));}
+const evalOf=(c,p)=>S.evals[pairKey(c.id,p.id)]||null;
+const isStale=(c,p)=>{const e=evalOf(c,p);return !!e&&e.firma!==firma(c,p);};
+const match=(c,p)=>computeMatch(c,p,evalOf(c,p));
+const etapa=(c,p)=>(S.pipe[pairKey(c.id,p.id)]||{}).etapa||"nuevo";
+function rankFor(p){return S.cands.map(c=>({c,r:match(c,p)})).sort((a,b)=>(b.r.apto-a.r.apto)||(b.r.total-a.r.total));}
+function pending(filter){const out=[];for(const p of openPuestos())for(const c of S.cands){if(filter&&!filter(c,p))continue;const r=match(c,p);if(!r.apto)continue;const e=evalOf(c,p);if(!e||e.firma!==firma(c,p))out.push({c,p});}return out;}
+function nextCode(list,prefix,pad){let m=0;for(const x of list){const n=parseInt(String(x.codigo||"").replace(/\D/g,""),10);if(n>m)m=n;}return prefix+String(m+1).padStart(pad,"0");}
+function vocab(){const s=new Set();for(const p of S.puestos){(p.habExcl||[]).concat(p.habDes||[]).forEach(x=>s.add(x));}return [...s];}
+function suggestions(){
+  const out=[];const ops=openPuestos();
+  for(const c of S.cands){
+    if(!c.postuloA)continue;const p0=P(c.postuloA);
+    const base=p0&&p0.estado!=="cerrada"?match(c,p0):null;const baseT=base&&base.apto?base.total:0;
+    let best=null;
+    for(const p of ops){if(p.id===c.postuloA)continue;const r=match(c,p);if(r.apto&&r.total>=baseT+5&&(!best||r.total>best.r.total))best={p,r};}
+    if(best)out.push({c,p0,base,best});
+  }
+  return out.sort((a,b)=>b.best.r.total-a.best.r.total);
+}
+
+/* ---------- piezas de interfaz ---------- */
+function scoreTag(r){if(!r.apto)return `<span class="sc" data-b="0" title="${esc(r.motivos.join(" · "))}">No apto</span>`;const b=band(r.total);return `<span class="sc" data-b="${b}" title="${BANDL[b]}${r.provisional?" · sin evaluación IA":""}">${r.total}${r.provisional?"<small>*</small>":""}</span>`;}
+function huella(r){return `<span class="huella${r.apto?"":" off"}" role="img" aria-label="${esc(CRIT.map(([k,l])=>l+" "+(r.sub[k]==null?"pendiente":r.sub[k])).join(", "))}">${CRIT.map(([k,l])=>{const v=r.sub[k];return `<i class="${k==="ia"?"ia":""}${v==null?" na":""}" style="--h:${v==null?0:v}%" title="${esc(l)}: ${v==null?"pendiente":v}"></i>`;}).join("")}</span>`;}
+const legend=()=>`<div class="legend"><span><i></i>Experiencia · Habilidades · Inglés · Ubicación (reglas y fórmulas)</span><span><i class="ia"></i>Ajuste al perfil (IA)</span><span>* sin evaluación IA todavía</span></div>`;
+const tipoChip=p=>p.tipo==="especializada"?`<span class="chip acc">Especializada</span>`:`<span class="chip">Masiva</span>`;
+function wbar(w){return `<div class="wbar">${CRIT.map(([k])=>`<i class="${k==="ia"?"ia":""}" style="flex:${w[k]||0}"></i>`).join("")}</div><div class="wlab">${CRIT.map(([k,l])=>`<span>${esc(l)} <b>${w[k]||0}%</b></span>`).join("")}</div>`;}
+function etapaSel(c,p){const v=etapa(c,p);return `<select data-etapa="${esc(pairKey(c.id,p.id))}" data-c="${esc(c.id)}" data-p="${esc(p.id)}" aria-label="Etapa" ${S.readonly||!S.db?"disabled":""}>${ETAPAS.map(([k,l])=>`<option value="${k}" ${k===v?"selected":""}>${l}</option>`).join("")}</select>`;}
+function aiBtn(label,act,attrs){if(!S.ai)return "";return `<button class="btn ia" data-act="${act}" ${attrs||""} ${JOB?"disabled":""}>${esc(label)}</button>`;}
+
+const TIER={4:"Excelente",3:"Bueno",2:"Aceptable",1:"Bajo"};
+function scout(c,p,r,o){
+  o=o||{};const ok=!!(r&&r.apto);const t=ok?band(r.total):0;const f=c.ficha||{};
+  const act=o.act||(p?"pair":"cand");
+  return `<button class="scout" data-t="${t}" data-act="${act}" data-c="${esc(c.id)}" ${p?`data-p="${esc(p.id)}"`:""}>
+    <div class="sc-top"><div><div class="sc-num${ok?"":" dash"}">${ok?r.total+(r.provisional?"*":""):"—"}</div><span class="sc-pos">${esc(o.pos||(p?p.titulo:"Sin encaje abierto"))}</span></div><span class="sc-tier">${t?TIER[t]:"No apto"}</span></div>
+    <div><div class="sc-name">${esc(nameOf(c))}</div><div class="sc-meta">${esc(c.codigo)} · ${esc(f.zona||"")} · Inglés ${esc(INGL[f.ingles]||"—")}</div></div>
+    ${ok?`<div class="sc-stats">${[["exp","EXP"],["hab","HAB"],["ing","ING"],["ubi","UBI"],["ia","IA"]].map(([k,l])=>`<div class="${k==="ia"?"ia":""}" title="${esc(CRIT.find(x=>x[0]===k)[1])}"><b>${r.sub[k]==null?"–":r.sub[k]}</b><span>${l}</span></div>`).join("")}</div>`
+      :`<div class="chips">${(f.habilidades||[]).slice(0,4).map(h=>`<span class="chip">${esc(h)}</span>`).join("")}</div>`}
+    ${o.foot?`<div class="sc-foot">${o.foot}</div>`:""}
+  </button>`;
+}
+function banner(){
+  if(S.dbState==="sin")return `<div class="banner">No se pudo conectar con el servidor de Perfilar. Recargá la página en unos segundos.</div>`;
+  if(S.dbState==="error")return `<div class="banner">Se perdió la conexión con la base de datos. Recargá la página para reconectar.</div>`;
+  if(S.readonly)return `<div class="banner">Estás viendo la base en modo lectura: tu acceso a esta página no permite cargar ni modificar datos.</div>`;
+  return "";
+}
+function loading(){return `<div class="card empty"><h3>Abriendo la base de Perfilar</h3><p>Cargando vacantes, currículums y evaluaciones.</p></div>`;}
+
+/* ---------- vistas ---------- */
+const MIN_MANUAL=4, MIN_REVISION=1;
+function relTime(iso){const t=Date.parse(iso);if(!t)return "";const m=Math.round((Date.now()-t)/60000);if(m<1)return "recién";if(m<60)return "hace "+m+" min";const h=Math.round(m/60);if(h<24)return "hace "+h+" h";const d=Math.round(h/24);return "hace "+d+(d===1?" día":" días");}
+function activity(){
+  const ev=[];
+  for(const p of S.puestos)if(p.creado)ev.push({t:p.creado,txt:`Se abrió la vacante <b>${esc(p.titulo)}</b> para ${esc(p.cliente)}`});
+  for(const c of S.cands)if(c.creado)ev.push({t:c.creado,txt:`Se cargó el CV de <b>${esc(nameOf(c))}</b> (${esc(c.fuente||"archivo")})`,act:`data-act="cand" data-c="${esc(c.id)}"`});
+  for(const k in S.evals){const e=S.evals[k];const c=C(e.cid),p=P(e.pid);if(c&&p&&e.fecha)ev.push({t:e.fecha,txt:`La IA evaluó a <b>${esc(nameOf(c))}</b> para ${esc(p.titulo)}: ${e.puntaje}/10`,act:`data-act="pair" data-c="${esc(c.id)}" data-p="${esc(p.id)}"`});}
+  for(const k in S.pipe){const x=S.pipe[k];const c=C(x.cid),p=P(x.pid);if(c&&p&&x.fecha)ev.push({t:x.fecha,txt:`<b>${esc(nameOf(c))}</b> pasó a ${esc(ETL[x.etapa]||x.etapa)} en ${esc(p.titulo)}`,act:`data-act="pair" data-c="${esc(c.id)}" data-p="${esc(p.id)}"`});}
+  return ev.sort((a,b)=>Date.parse(b.t)-Date.parse(a.t)).slice(0,8);
+}
+function viewPanel(){
+  const ops=openPuestos();let strong=0,aptos=0,evald=0,enProc=0,contr=0;const tareas=[];
+  for(const p of ops){let n=0;for(const c of S.cands){const r=match(c,p);if(!r.apto)continue;n++;aptos++;if(!isStale(c,p)&&evalOf(c,p))evald++;if(r.total>=80)strong++;const et=etapa(c,p);
+      if(["preseleccionado","entrevista","presentado"].includes(et))enProc++;if(et==="contratado")contr++;
+      if(r.total>=80&&et==="nuevo"&&!r.provisional)tareas.push({k:1,html:`Preseleccionar a <b>${esc(nameOf(c))}</b> para ${esc(p.titulo)} (${r.total} puntos)`,act:`data-act="pair" data-c="${esc(c.id)}" data-p="${esc(p.id)}"`});}
+    if(!n&&S.cands.length)tareas.push({k:2,html:`<b>${esc(p.titulo)}</b> no tiene candidatos aptos: revisar requisitos o sumar CVs`,act:`data-act="openP" data-p="${esc(p.id)}"`});}
+  const pend=pending().length;const sugs=suggestions();const cruces=S.cands.length*ops.length;
+  const horas=Math.max(0,(cruces*MIN_MANUAL-S.cands.length*MIN_REVISION)/60);
+  const counts={};for(const k in S.pipe){const x=S.pipe[k];if(P(x.pid)&&C(x.cid))counts[x.etapa]=(counts[x.etapa]||0)+1;}
+  const maxC=Math.max(1,...ETAPAS.map(([k])=>counts[k]||0));
+  const dis=!S.db||S.readonly?"disabled":"";
+  const hoy=new Date().toLocaleDateString("es-UY",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+  const hero=`<section class="hero ops"><div class="hero-in"><div>
+      <div class="lbl" style="color:var(--brass);opacity:1">${esc(empresa())} · Recursos Humanos</div>
+      <h1 style="margin-top:10px">Panel de operaciones</h1>
+      <p class="lead">Estado del proceso al ${esc(hoy)}. Perfilar automatiza la lectura de currículums, el filtro de requisitos y la asignación de candidatos a las vacantes de ${esc(empresa())}.</p>
+      <div class="row"><button class="btn gold" data-act="newCV" ${dis}>Subir CV</button><button class="btn light" data-act="newPuesto" ${dis}>Nueva vacante</button>${pend&&S.ai?aiBtn(`Evaluar pendientes (${pend})`,"evalAll"):""}</div>
+    </div>
+    <div class="hstats">
+      <div class="hstat"><div class="v">${ops.length}</div><div class="l">Vacantes abiertas</div></div>
+      <div class="hstat"><div class="v">${S.cands.length}</div><div class="l">CVs procesados</div></div>
+      <div class="hstat"><div class="v">${cruces}</div><div class="l">Cruces automáticos</div></div>
+      <div class="hstat"><div class="v">${strong}</div><div class="l">Coincidencias excelentes</div></div>
+      <div class="hstat"><div class="v">${horas.toLocaleString("es-UY",{maximumFractionDigits:1})}<small> h</small></div><div class="l">Revisión manual ahorrada</div></div>
+    </div>
+  </div></section>`;
+  const stages=[["CVs recibidos",S.cands.length,"Subidos en PDF, Word o imagen"],["Cruces CV × vacante",cruces,"Cada CV contra cada vacante abierta"],["Cumplen excluyentes",aptos,"Pasan el filtro de reglas"],["Evaluados por IA",evald,"Ajuste al perfil al día"],["En proceso",enProc,"Preselección, entrevista o presentados"],["Contratados",contr,"Vacantes cubiertas"]];
+  const acts=activity();
+  tareas.sort((a,b)=>a.k-b.k);
+  const body=`
+  <div class="card pad stack"><div class="row between"><h2>Flujo del proceso</h2><span class="small muted">Lo que antes se hacía a mano, ahora corre solo en cada carga</span></div>
+    <ol class="flow">${stages.map(([t,n,d],i)=>`<li><span class="lbl">Etapa ${i+1}</span><b class="num">${n}</b><span class="ft">${t}</span><span class="small muted">${d}</span></li>`).join("")}</ol></div>
+  <div class="cols">
+    <section class="stack">
+      <div class="card pad stack"><div class="row between"><h3>Bandeja de tareas</h3><span class="chip">${tareas.length+(pend?1:0)} pendientes</span></div>
+        <ul class="tasks">${pend?`<li><span class="tdot ia"></span><span>Hay <b>${pend}</b> ${pend===1?"evaluación":"evaluaciones"} de IA pendientes o desactualizadas.</span>${aiBtn("Evaluar","evalAll")}</li>`:""}
+        ${tareas.slice(0,8).map(t=>`<li><span class="tdot${t.k===2?" warn":""}"></span><span>${t.html}</span><button class="btn sm" ${t.act}>${t.k===2?"Ver vacante":"Revisar"}</button></li>`).join("")}
+        ${!pend&&!tareas.length?`<li class="muted">No hay tareas pendientes.</li>`:""}</ul></div>
+      <div class="row between"><h2>Vacantes abiertas</h2>${legend()}</div>
+      <div class="plist">${ops.map(p=>{const rk=rankFor(p);const ap=rk.filter(x=>x.r.apto);return `
+        <button class="card pcard" data-act="openP" data-p="${esc(p.id)}">
+          <div class="row between"><span class="lbl">${esc(p.cliente)} · ${esc(p.codigo)}</span>${tipoChip(p)}</div>
+          <div><h3>${esc(p.titulo)}</h3><div class="small muted" style="margin-top:6px">${esc(p.zona||"")} · ${+p.vacantes||1} ${(+p.vacantes||1)===1?"vacante":"vacantes"} · ${ap.length} de ${rk.length} CVs cumplen los excluyentes</div></div>
+          <div class="mini">${ap.slice(0,3).map(x=>`<div><span>${esc(nameOf(x.c))}</span><span class="row" style="gap:8px">${huella(x.r)}${scoreTag(x.r)}</span></div>`).join("")||`<div class="muted small">${S.cands.length?"Ningún CV del banco cumple los excluyentes todavía.":"Todavía no hay CVs en el banco."}</div>`}</div>
+        </button>`;}).join("")||`<div class="card empty"><p>No hay vacantes abiertas.</p></div>`}</div>
+    </section>
+    <aside class="stack">
+      <div class="card pad stack"><h3>Actividad reciente</h3><ul class="log">${acts.map(a=>`<li ${a.act?`class="click" ${a.act}`:""}><span>${a.txt}</span><span class="small muted">${relTime(a.t)}</span></li>`).join("")||`<li class="muted">Sin actividad todavía.</li>`}</ul></div>
+      <div class="card pad stack tilt"><h3>Sugerencias de reasignación</h3><p class="small muted">Candidatos que encajan mejor en otra vacante que en la que se postularon.</p>
+        <div>${sugs.map(s=>`<div class="sug"><div class="row between"><b>${esc(nameOf(s.c))}</b>${scoreTag(s.best.r)}</div>
+          <div class="small muted">Se postuló a ${esc(s.p0?s.p0.titulo:"una vacante cerrada")} (${s.base?(s.base.apto?s.base.total:"no apto"):"—"}) y encaja mejor en <b style="color:var(--ink)">${esc(s.best.p.titulo)}</b>.</div>
+          <div><button class="linkbtn small" data-act="pair" data-c="${esc(s.c.id)}" data-p="${esc(s.best.p.id)}">Ver el cálculo</button></div></div>`).join("")||`<p class="small muted">Sin sugerencias por ahora.</p>`}</div></div>
+      <div class="card pad stack"><h3>Pipeline</h3><div class="funnel">${ETAPAS.filter(([k])=>k!=="nuevo").map(([k,l])=>`<div class="fr"><span>${l}</span><span class="bar"><i style="width:${100*(counts[k]||0)/maxC}%"></i></span><span class="num">${counts[k]||0}</span></div>`).join("")}</div></div>
+    </aside>
+  </div>`;
+  return {hero,body};
+}
+
+function viewBusquedas(){
+  const ps=sortP(S.puestos);
+  if(!ps.length)return `<div class="head"><div><h1>Vacantes</h1><p>Los puestos que la empresa necesita cubrir, por área o sucursal.</p></div><button class="btn pri" data-act="newPuesto" ${!S.db||S.readonly?"disabled":""}>Nueva vacante</button></div><div class="card empty"><h3>Todavía no hay vacantes</h3><p>Creá la primera con sus requisitos y pesos.</p></div>`;
+  if(!S.sel||!P(S.sel))S.sel=ps[0].id;
+  const p=P(S.sel);const rk=rankFor(p);const ap=rk.filter(x=>x.r.apto), no=rk.filter(x=>!x.r.apto);
+  const pend=pending((c,q)=>q.id===p.id).length;const w=p.pesos||PESOS_DEF[p.tipo];
+  const row=(x,i)=>`<tr class="click" data-act="pair" data-c="${esc(x.c.id)}" data-p="${esc(p.id)}">
+      <td class="rk">${x.r.apto?i+1:"—"}</td>
+      <td><div class="who">${esc(nameOf(x.c))}</div><div class="small">${esc(x.c.codigo)} · ${esc(x.c.ficha.zona||"")} · Inglés ${esc(INGL[x.c.ficha.ingles]||"—")}${x.c.postuloA===p.id?` · <span class="chip acc">Se postuló acá</span>`:""}${isStale(x.c,p)?` · <span class="chip iac">IA desactualizada</span>`:""}</div></td>
+      <td>${huella(x.r)}</td><td>${scoreTag(x.r)}</td>
+      <td class="small">${x.r.apto?esc(BANDL[band(x.r.total)]):`<span style="color:var(--bad)">${esc(x.r.motivos[0])}</span>`}</td>
+      <td>${etapaSel(x.c,p)}</td></tr>`;
+  return `
+  <div class="head"><div><h1>Vacantes</h1><p>Elegí una vacante para ver el ranking de todo el banco de CVs para ese puesto.</p></div><button class="btn pri" data-act="newPuesto" ${!S.db||S.readonly?"disabled":""}>Nueva vacante</button></div>
+  <div class="split">
+    <div class="side">${ps.map(q=>{const n=rankFor(q).filter(x=>x.r.apto).length;return `<button class="sitem${q.estado==="cerrada"?" closed":""}" data-act="selP" data-p="${esc(q.id)}" aria-current="${q.id===p.id}">
+      <div class="row between"><span class="lbl">${esc(q.cliente)}</span>${q.estado==="cerrada"?`<span class="chip line">Cerrada</span>`:tipoChip(q)}</div><b>${esc(q.titulo)}</b><span class="small muted">${esc(q.codigo)} · ${n} ${n===1?"CV apto":"CVs aptos"}</span></button>`;}).join("")}</div>
+    <div class="stack">
+      <div class="card pad stack">
+        <div class="row between" style="align-items:flex-start"><div><div class="lbl">${esc(p.cliente)} · ${esc(p.codigo)}</div><h2 style="margin-top:4px">${esc(p.titulo)}</h2><div class="row small muted" style="margin-top:6px">${tipoChip(p)}<span>${esc(p.zona||"")}</span><span>·</span><span>${+p.vacantes||1} ${(+p.vacantes||1)===1?"vacante":"vacantes"}</span>${p.estado==="cerrada"?`<span class="chip line">Cerrada</span>`:""}</div></div>
+          <div class="row">${aiBtn("Informe para el área","informe",`data-p="${esc(p.id)}"`)}<button class="btn" data-act="editP" data-p="${esc(p.id)}" ${!S.db||S.readonly?"disabled":""}>Editar</button><button class="btn ghost" data-act="toggleP" data-p="${esc(p.id)}" ${!S.db||S.readonly?"disabled":""}>${p.estado==="cerrada"?"Reabrir":"Cerrar vacante"}</button></div></div>
+        <p style="max-width:75ch">${esc(p.perfil)}</p>
+        <div class="req">
+          <div><span class="lbl">Excluyentes</span><div class="chips">${(p.habExcl||[]).map(s=>`<span class="chip bad">${esc(s)}</span>`).join("")}${p.inglesExcl&&ingIdx(p.inglesMin)>0?`<span class="chip bad">Inglés ${esc(INGL[p.inglesMin])}</span>`:""}${p.turnosExcl&&(p.turnos||[]).length?`<span class="chip bad">Turno ${esc(p.turnos.join(" + "))}</span>`:""}${!(p.habExcl||[]).length&&!(p.inglesExcl&&ingIdx(p.inglesMin)>0)&&!(p.turnosExcl&&(p.turnos||[]).length)?`<span class="small muted">Ninguno</span>`:""}</div></div>
+          <div><span class="lbl">Deseables</span><div class="chips">${(p.habDes||[]).map(s=>`<span class="chip">${esc(s)}</span>`).join("")||`<span class="small muted">Ninguna</span>`}</div></div>
+          <div><span class="lbl">Experiencia</span><span>${+p.expMin||0} ${(+p.expMin||0)===1?"año":"años"} mínimo en ${esc((p.rubros||[]).join(", ")||"cualquier rubro")}</span></div>
+          <div><span class="lbl">Pesos del puntaje</span>${wbar(w)}</div>
+        </div>
+      </div>
+      ${pend&&S.ai&&p.estado!=="cerrada"?`<div class="banner info row between"><span>${pend} ${pend===1?"candidato apto espera":"candidatos aptos esperan"} la evaluación de IA para esta vacante.</span>${aiBtn("Evaluar ahora","evalP",`data-p="${esc(p.id)}"`)}</div>`:""}
+      ${ap.length?`<div class="stack"><div class="row between"><h3>Terna sugerida</h3><span class="small muted">Los mejores del banco para este puesto</span></div><div class="podium">${ap.slice(0,3).map((x,i)=>scout(x.c,p,x.r,{pos:"#"+(i+1)+" · "+p.titulo,foot:"Etapa: "+esc(ETL[etapa(x.c,p)])+(x.c.postuloA===p.id?" · se postuló acá":" · del banco")})).join("")}</div></div>`:""}
+      <div class="card">
+        <div class="pad row between" style="padding-bottom:6px"><h3>Ranking completo</h3>${legend()}</div>
+        <div class="tblwrap"><table class="tbl"><thead><tr><th>#</th><th>Candidato</th><th>Huella</th><th>Puntaje</th><th>Nivel</th><th>Etapa</th></tr></thead>
+        <tbody>${ap.map(row).join("")||`<tr><td colspan="6" class="muted">Ningún CV cumple los excluyentes de esta vacante.</td></tr>`}</tbody>
+        ${S.showNo?`<tbody>${no.map(row).join("")}</tbody>`:""}</table></div>
+        ${no.length?`<div class="grp"><span class="small muted">${no.length} ${no.length===1?"CV no cumple":"CVs no cumplen"} algún requisito excluyente.</span><button class="btn sm ghost" data-act="toggleNo">${S.showNo?"Ocultar":"Mostrar"}</button></div>`:""}
+      </div>
+    </div>
+  </div>`;
+}
+
+function viewBanco(){
+  return `<div class="head"><div><h1>Banco de CVs</h1><p>Todos los currículums que recibió la empresa, sin importar a qué vacante se postularon. La IA los convierte en fichas comparables.</p></div><button class="btn pri" data-act="newCV" ${!S.db||S.readonly?"disabled":""}>Cargar CV</button></div>
+  <div class="toolbar"><input class="search" type="text" id="q" placeholder="Buscar por nombre, código, barrio o habilidad" value="${esc(S.q)}" aria-label="Buscar en el banco"></div>
+  <div id="bancoList">${bancoList()}</div>`;
+}
+function bancoList(){
+  const q=norm(S.q);const ops=openPuestos();
+  const list=S.cands.filter(c=>{if(!q)return true;const f=c.ficha||{};return norm([nameOf(c),c.codigo,f.zona,(f.habilidades||[]).join(" "),f.estudios].join(" ")).includes(q);})
+    .sort((a,b)=>String(b.codigo).localeCompare(String(a.codigo)));
+  if(!S.cands.length)return `<div class="card empty"><h3>El banco está vacío</h3><p>Cargá el primer currículum pegando su texto o subiendo un PDF.</p></div>`;
+  if(!list.length)return `<div class="card empty"><p>Ningún CV coincide con “${esc(S.q)}”.</p></div>`;
+  return `<div class="cgrid">${list.map(c=>{let best=null;for(const p of ops){const r=match(c,p);if(r.apto&&(!best||r.total>best.r.total))best={p,r};}
+    const post=c.postuloA&&P(c.postuloA)?"Se postuló a "+esc(P(c.postuloA).titulo):"Cargado al banco";
+    return scout(c,best?best.p:null,best?best.r:null,{act:"cand",pos:best?"Mejor encaje: "+best.p.titulo:"Sin encaje abierto",foot:post});}).join("")}</div>`;
+}
+
+function viewMatriz(){
+  const ops=openPuestos();
+  if(!ops.length||!S.cands.length)return `<div class="head"><div><h1>Matriz de compatibilidad</h1></div></div><div class="card empty"><p>Hacen falta vacantes abiertas y CVs en el banco para armar la matriz.</p></div>`;
+  const R={};const top={};
+  for(const p of ops){let b=-1;for(const c of S.cands){const r=match(c,p);R[pairKey(c.id,p.id)]=r;if(r.apto&&r.total>b)b=r.total;}top[p.id]=b;}
+  const cs=S.cands.slice().sort((a,b)=>String(a.codigo).localeCompare(String(b.codigo)));
+  return `<div class="head"><div><h1>Matriz de compatibilidad</h1><p>Cada fila es un CV y cada columna una vacante abierta. Tocá una celda para ver el cálculo. El mejor de cada columna está remarcado.</p></div></div>
+  <div class="card"><div class="tblwrap"><table class="tbl mx"><thead><tr><th>Candidato</th>${ops.map(p=>`<th>${esc(p.titulo)}<small>${esc(p.cliente)}</small></th>`).join("")}</tr></thead>
+  <tbody>${cs.map(c=>`<tr><td><div class="who">${esc(nameOf(c))}</div><div class="small">${esc(c.codigo)}${c.postuloA&&P(c.postuloA)?" · se postuló a "+esc(P(c.postuloA).titulo):""}</div></td>
+    ${ops.map(p=>{const r=R[pairKey(c.id,p.id)];return `<td><button class="cell${r.apto&&r.total===top[p.id]?" top":""}" data-act="pair" data-c="${esc(c.id)}" data-p="${esc(p.id)}" aria-label="${esc(nameOf(c)+" para "+p.titulo)}">${r.apto?scoreTag(r):`<span class="sc" data-b="0" title="${esc(r.motivos.join(" · "))}">✕</span>`}</button></td>`;}).join("")}</tr>`).join("")}</tbody></table></div></div>
+  <div class="legend"><span><span class="sc" data-b="4">80</span> Excelente: 80 o más</span><span><span class="sc" data-b="3">65</span> Bueno: 65 a 79</span><span><span class="sc" data-b="2">50</span> Aceptable: 50 a 64</span><span><span class="sc" data-b="1">40</span> Bajo: menos de 50</span><span><span class="sc" data-b="0">✕</span> No cumple un excluyente</span></div>`;
+}
+
+function calcTable(r){
+  const d=r.det;
+  const detail={
+    exp:`${d.rel} ${d.rel===1?"año":"años"} en rubros relevantes (mínimo ${d.min})`,
+    hab:d.allN?`${d.matched} de ${d.allN} habilidades${d.excl.concat(d.des).filter(x=>!x.ok).length?" · falta: "+d.excl.concat(d.des).filter(x=>!x.ok).map(x=>x.s).join(", "):""}`:"El puesto no pide habilidades",
+    ing:`Tiene ${INGL[ING[d.ci]]}, se pide ${INGL[ING[d.ri]]}`,
+    ubi:`${d.zonaTxt}: ${d.zonaPts}/50 · Turnos ${d.req.length?d.cubre.length+" de "+d.req.length:"sin requisito"}: ${d.turnPts}/50`,
+    ia:r.sub.ia==null?"Pendiente: no cuenta en el total":`${r.sub.ia/10}/10 según la evaluación de IA`
+  };
+  let sw=0;CRIT.forEach(([k])=>{if(r.sub[k]!=null)sw+=r.w[k]||0;});
+  return `<div class="tblwrap"><table class="tbl calc"><thead><tr><th>Criterio</th><th>Detalle</th><th>Puntaje</th><th>Peso</th><th>Aporte</th></tr></thead><tbody>
+  ${CRIT.map(([k,l])=>{const v=r.sub[k];const ap=v==null?null:(v*(r.w[k]||0)/sw);return `<tr><td>${esc(l)}</td><td class="det">${esc(detail[k])}</td><td>${v==null?"—":v}</td><td>${r.w[k]||0}%</td><td>${ap==null?"—":ap.toFixed(1)}</td></tr>`;}).join("")}
+  </tbody><tfoot><tr><td colspan="4">Puntaje final${sw!==100?` (pesos reescalados sobre ${sw}%)`:""}</td><td>${r.total}</td></tr></tfoot></table></div>`;
+}
+
+function viewMetodo(){
+  let ex=null;for(const p of openPuestos()){const rk=rankFor(p).filter(x=>x.r.apto&&!x.r.provisional);if(rk.length){ex={p,c:rk[0].c,r:rk[0].r};break;}}
+  return `<div class="head"><div><h1>Cómo calcula Perfilar</h1><p>Cómo el sistema automatiza el proceso de selección: el puntaje de cada par CV–puesto combina reglas fijas, fórmulas y una sola parte de juicio de la IA. Todo es auditable.</p></div></div>
+  <div class="mgrid">
+    <div class="card pad stack step ia"><span class="n" aria-hidden="true">1</span><span class="lbl">Paso 1 · IA</span><h3>Lectura del CV</h3><p>La IA lee el currículum una sola vez y lo convierte en una ficha con campos fijos: barrio, experiencias con rubro y años, habilidades, inglés, disponibilidad y estudios. No registra edad, género, nacionalidad, foto ni contacto.</p></div>
+    <div class="card pad stack step "><span class="n" aria-hidden="true">2</span><span class="lbl">Paso 2 · Reglas</span><h3>Filtro de excluyentes</h3><p>Si al candidato le falta una habilidad excluyente, no llega al inglés mínimo marcado como excluyente o no cubre un turno obligatorio, queda <b>No apto</b> para ese puesto, sin importar su puntaje.</p></div>
+    <div class="card pad stack step "><span class="n" aria-hidden="true">3</span><span class="lbl">Paso 3 · Fórmulas</span><h3>Criterios medibles</h3><p>Experiencia, habilidades, inglés y ubicación se calculan con las fórmulas de abajo. El mismo CV siempre da el mismo resultado.</p></div>
+    <div class="card pad stack step ia"><span class="n" aria-hidden="true">4</span><span class="lbl">Paso 4 · IA</span><h3>Ajuste al perfil</h3><p>Solo para los aptos, la IA puntúa de 1 a 10 lo que una regla no ve: trayectoria, coherencia con el perfil buscado y potencial. Recibe la ficha anonimizada y siempre justifica.</p></div>
+  </div>
+  <div class="card pad prose">
+    <h2>Fórmulas</h2>
+    <div class="formula">Experiencia   años relevantes = suma de años en los rubros del puesto
+              si mínimo = 0:   50 + 12,5 × años         (tope 100)
+              si cumple:      70 + 30 × (años − mín) / mín (tope 100)
+              si no cumple:   70 × años / mín
+Habilidades   100 × habilidades que tiene / habilidades pedidas (excluyentes + deseables)
+Inglés        100 × nivel del candidato / nivel pedido   (Ninguno 0 · Básico 1 · Intermedio 2 · Avanzado 3 · Nativo 4)
+Ubicación     barrio (50) + turnos (50)
+              barrio: mismo o remoto 50 · vecino 35 · lejano 15
+              turnos: 50 × turnos que cubre / turnos pedidos
+Ajuste (IA)   puntaje de 1 a 10 × 10
+
+Puntaje final = Σ (puntaje del criterio × peso) / Σ pesos</div>
+    <ul>
+      <li>Los pesos los define cada vacante. Por defecto, una vacante <b>masiva</b> pesa más la ubicación y los horarios; una <b>especializada</b>, las habilidades.</li>
+      <li>Si la IA todavía no evaluó un par, el total se calcula con los otros criterios y se marca con un asterisco.</li>
+      <li>Cuando cambia el perfil buscado o la ficha del candidato, la evaluación de IA queda marcada como desactualizada hasta que se vuelve a correr.</li>
+      <li>Niveles: Excelente desde 80, Bueno de 65 a 79, Aceptable de 50 a 64 y Bajo por debajo de 50.</li>
+      <li>El modo ciego oculta los nombres en pantalla. La IA nunca recibe nombres al evaluar.</li>
+    </ul>
+  </div>
+  <div class="card pad prose">
+    <h2>Métricas del proceso</h2>
+    <p>El panel de operaciones mide cuánto trabajo manual reemplaza el sistema.</p>
+    <div class="formula">Cruces automáticos       = CVs en el banco × vacantes abiertas
+Revisión manual ahorrada = (cruces × ${MIN_MANUAL} min − CVs × ${MIN_REVISION} min) / 60</div>
+    <ul>
+      <li>Supuesto: un reclutador tarda unos ${MIN_MANUAL} minutos en comparar un CV con los requisitos de un puesto.</li>
+      <li>Con Perfilar solo revisa la ficha que arma la IA, alrededor de ${MIN_REVISION} minuto por CV, y el cruce con todas las vacantes es automático.</li>
+      <li>La bandeja de tareas avisa qué hacer después: evaluaciones de IA pendientes, candidatos excelentes sin preseleccionar y vacantes sin candidatos aptos.</li>
+    </ul>
+  </div>
+  ${ex?`<div class="card pad stack"><span class="lbl">Ejemplo con datos de la base</span><h3>${esc(nameOf(ex.c))} para ${esc(ex.p.titulo)}</h3>${calcTable(ex.r)}</div>`:""}`;
+}
+
+/* ---------- drawer ---------- */
+function drawerPair(c,p){
+  const r=match(c,p);const ev=evalOf(c,p);const stale=isStale(c,p);const d=r.det;
+  const others=openPuestos().filter(q=>q.id!==p.id).map(q=>({q,r:match(c,q)})).filter(x=>x.r.apto).sort((a,b)=>b.r.total-a.r.total);
+  return `<div class="panel-h"><div class="stack" style="gap:6px"><span class="lbl">${esc(c.codigo)} → ${esc(p.codigo)} · ${esc(p.cliente)}</span><h2 id="dTitle">${esc(nameOf(c))}</h2><span class="muted">para ${esc(p.titulo)}</span></div><button class="x" data-act="closeDrawer" aria-label="Cerrar">×</button></div>
+  <div class="panel-b">
+    <div class="card pad big"><span class="sc" data-b="${r.apto?band(r.total):0}">${r.apto?r.total:"No apto"}</span><div class="stack" style="gap:4px"><b>${r.apto?"Nivel "+BANDL[band(r.total)]:"No cumple los excluyentes"}</b><span class="small muted">${r.apto?(r.provisional?"Sin evaluación de IA: el total usa solo reglas y fórmulas.":"Reglas, fórmulas y evaluación de IA."):esc(r.motivos.join(" · "))}</span>${huella(r)}</div></div>
+    <div class="card pad stack"><h3>Requisitos excluyentes</h3><ul class="checks">
+      ${d.excl.map(x=>`<li><span class="${x.ok?"ok":"no"}">${x.ok?"✓":"✕"}</span>${esc(x.s)}</li>`).join("")}
+      ${p.inglesExcl&&d.ri>0?`<li><span class="${d.ci>=d.ri?"ok":"no"}">${d.ci>=d.ri?"✓":"✕"}</span>Inglés ${esc(INGL[ING[d.ri]])} o más (tiene ${esc(INGL[ING[d.ci]])})</li>`:""}
+      ${p.turnosExcl&&d.req.length?`<li><span class="${d.faltaT.length?"no":"ok"}">${d.faltaT.length?"✕":"✓"}</span>Disponible ${esc(d.req.join(" y "))}${d.faltaT.length?" (le falta "+esc(d.faltaT.join(", "))+")":""}</li>`:""}
+      ${!d.excl.length&&!(p.inglesExcl&&d.ri>0)&&!(p.turnosExcl&&d.req.length)?`<li class="muted">Esta vacante no tiene excluyentes.</li>`:""}</ul></div>
+    <div class="card pad stack"><h3>Cálculo del puntaje</h3>${calcTable(r)}</div>
+    ${r.apto?`<div class="stack"><div class="row between"><h3>Evaluación de la IA</h3>${aiBtn(ev?"Volver a evaluar":"Evaluar con IA","evalPair",`data-c="${esc(c.id)}" data-p="${esc(p.id)}"`)}</div>
+      ${ev?`<div class="iabox">${stale?`<span class="chip iac" style="align-self:flex-start">Desactualizada: cambió el perfil o la ficha</span>`:""}<div class="row"><b class="num">${ev.puntaje}/10</b><span>${esc(ev.justificacion)}</span></div>
+        ${(ev.fortalezas||[]).length?`<div><span class="lbl">Fortalezas</span><ul>${ev.fortalezas.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>`:""}
+        ${(ev.dudas||[]).length?`<div><span class="lbl">A validar</span><ul>${ev.dudas.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>`:""}</div>`
+      :`<p class="muted small">${S.ai?"Este par todavía no tiene evaluación de IA.":"La evaluación de IA no está disponible en esta vista."}</p>`}</div>
+    <div class="stack"><div class="row between"><h3>Preguntas para la entrevista</h3>${ev?aiBtn((ev.preguntas||[]).length?"Generar otras":"Generar preguntas","preguntas",`data-c="${esc(c.id)}" data-p="${esc(p.id)}"`):""}</div>
+      ${ev&&(ev.preguntas||[]).length?`<ol class="qlist">${ev.preguntas.map(q=>`<li><b>${esc(q.pregunta)}</b><div class="small muted">${esc(q.objetivo)}</div></li>`).join("")}</ol>`:`<p class="muted small">${ev?"La IA arma tres preguntas enfocadas en lo que falta validar.":"Primero hace falta la evaluación de IA."}</p>`}</div>
+    <div class="card pad row between"><span><b>Etapa</b> <span class="small muted">en esta vacante</span></span>${etapaSel(c,p)}</div>`:""}
+    ${others.length?`<div class="stack"><h3>También encaja en</h3>${others.map(x=>`<button class="card pad row between" style="cursor:pointer;width:100%;text-align:left" data-act="pair" data-c="${esc(c.id)}" data-p="${esc(x.q.id)}"><span><b>${esc(x.q.titulo)}</b> <span class="small muted">${esc(x.q.cliente)}</span></span>${scoreTag(x.r)}</button>`).join("")}</div>`:""}
+    <div><button class="linkbtn" data-act="cand" data-c="${esc(c.id)}">Ver la ficha completa de ${esc(nameOf(c))}</button></div>
+  </div>`;
+}
+function drawerCand(c){
+  const f=c.ficha||{};const ops=openPuestos();
+  const rows=ops.map(p=>({p,r:match(c,p)})).sort((a,b)=>(b.r.apto-a.r.apto)||(b.r.total-a.r.total));
+  const sug=suggestions().find(s=>s.c.id===c.id);
+  return `<div class="panel-h"><div class="stack" style="gap:6px"><span class="lbl">${esc(c.codigo)}${c.postuloA&&P(c.postuloA)?" · se postuló a "+esc(P(c.postuloA).titulo):""}</span><h2 id="dTitle">${esc(nameOf(c))}</h2><span class="muted">${esc(f.zona||"")} · Inglés ${esc(INGL[f.ingles]||"—")}</span></div><button class="x" data-act="closeDrawer" aria-label="Cerrar">×</button></div>
+  <div class="panel-b">
+    ${sug?`<div class="banner info"><b>Sugerencia:</b> encaja mejor en ${esc(sug.best.p.titulo)} (${sug.best.r.total}) que en la vacante a la que se postuló (${sug.base?(sug.base.apto?sug.base.total:"no apto"):"—"}).</div>`:""}
+    <div class="stack"><h3>Encaje con las vacantes abiertas</h3>${rows.map(x=>`<button class="card pad row between" style="cursor:pointer;width:100%;text-align:left" data-act="pair" data-c="${esc(c.id)}" data-p="${esc(x.p.id)}"><span style="min-width:0"><b>${esc(x.p.titulo)}</b> <span class="small muted">${esc(x.p.cliente)}</span>${x.r.apto?"":`<div class="small" style="color:var(--bad)">${esc(x.r.motivos.join(" · "))}</div>`}</span><span class="row" style="gap:8px">${huella(x.r)}${scoreTag(x.r)}</span></button>`).join("")||`<p class="muted">No hay vacantes abiertas.</p>`}</div>
+    <div class="card pad stack"><h3>Ficha</h3><p>${esc(f.resumen||"")}</p>
+      <div class="tblwrap"><table class="tbl"><thead><tr><th>Puesto</th><th>Empresa</th><th>Rubro</th><th>Años</th></tr></thead><tbody>${(f.experiencias||[]).map(e=>`<tr><td>${esc(e.puesto)}</td><td>${esc(e.empresa)}</td><td>${esc(e.rubro)}</td><td class="num">${esc(e.anos)}</td></tr>`).join("")||`<tr><td colspan="4" class="muted">Sin experiencia registrada</td></tr>`}</tbody></table></div>
+      <div class="stack" style="gap:6px"><span class="lbl">Habilidades</span><div class="chips">${(f.habilidades||[]).map(h=>`<span class="chip">${esc(h)}</span>`).join("")||`<span class="muted small">—</span>`}</div></div>
+      <div class="req"><div><span class="lbl">Disponibilidad</span><span>${esc((f.disponibilidad||[]).join(", ")||"Sin dato")}</span></div><div><span class="lbl">Estudios</span><span>${esc(f.estudios||"—")}</span></div></div>
+    </div>
+    ${c.cvTexto?`<details class="card pad"><summary style="cursor:pointer;font-weight:600">CV original</summary><div class="small" style="white-space:pre-wrap;margin-top:10px">${esc(S.ciego?"Oculto en modo ciego.":c.cvTexto)}</div></details>`:""}
+    ${S.db&&!S.readonly?`<div class="row"><button class="btn" data-act="editCV" data-c="${esc(c.id)}">Editar ficha</button><button class="btn danger" data-act="delCV" data-c="${esc(c.id)}">Eliminar del banco</button></div>`:""}
+  </div>`;
+}
+
+/* ---------- render ---------- */
+let rq=0;
+function render(){if(rq)return;rq=requestAnimationFrame(()=>{rq=0;draw();});}
+function draw(){
+  $("#nav").innerHTML=Object.entries(VIEWS).map(([k,l])=>`<button class="tab" role="tab" data-act="go" data-v="${k}" aria-selected="${S.view===k}">${l}</button>`).join("");
+  $("#ciego").checked=S.ciego;
+  $("#emp").innerHTML=`<span class="lbl">Empresa</span> ${esc(S.empresa&&S.empresa.nombre?S.empresa.nombre:"Configurar")}`;
+  const act=document.activeElement, aid=act&&act.id&&$("#main").contains(act)?act.id:null, sel=aid&&act.selectionStart!=null?[act.selectionStart,act.selectionEnd]:null;
+  const fn={panel:viewPanel,busquedas:viewBusquedas,banco:viewBanco,matriz:viewMatriz,metodo:viewMetodo}[S.view];
+  const out=ready()?fn():{body:loading()};const o=typeof out==="string"?{body:out}:out;
+  $("#main").innerHTML=(o.hero||"")+`<div class="wrap">${banner()}${o.body}</div>`;
+  if(aid){const n=document.getElementById(aid);if(n){n.focus();if(sel)try{n.setSelectionRange(sel[0],sel[1]);}catch(e){}}}
+  drawDrawer();renderJob();
+}
+function drawDrawer(){
+  const dw=$("#drawer");const d=S.drawer;
+  if(!d){dw.hidden=true;return;}
+  const c=C(d.cid),p=d.pid?P(d.pid):null;
+  if(!c||(d.type==="pair"&&!p)){S.drawer=null;dw.hidden=true;return;}
+  const k=d.type+d.cid+(d.pid||"");const st=$("#drawerPanel .panel-b");const top=st&&drawDrawer.k===k?st.scrollTop:0;
+  $("#drawerPanel").innerHTML=d.type==="pair"?drawerPair(c,p):drawerCand(c);
+  dw.hidden=false;drawDrawer.k=k;
+  const nb=$("#drawerPanel .panel-b");if(nb)nb.scrollTop=top;
+}
+function renderJob(){const j=$("#job");if(!JOB){j.innerHTML="";return;}j.innerHTML=`<span class="job"><span class="dot"></span><span>${esc(JOB.label)}</span><button class="btn sm ghost" data-act="stopJob">Detener</button></span>`;}
+let tt;function toast(m){const t=$("#toast");t.textContent=m;t.hidden=false;clearTimeout(tt);tt=setTimeout(()=>t.hidden=true,4200);}
+
+/* ---------- base de datos ---------- */
+function dbErr(e){
+  const code=e&&e.code;
+  if(code==="invalid_argument"){S.readonly=true;render();toast("Tu acceso no permite modificar la base de Perfilar.");}
+  else if(code==="quota_exceeded")toast("La base llegó a su límite de tamaño. Eliminá CVs que ya no uses.");
+  else toast("No se pudo guardar. Revisá la conexión y probá de nuevo.");
+  throw e;
+}
+async function put(col,id,data){try{await S.db.collection(col).doc(id).set(data);}catch(e){dbErr(e);}}
+async function upd(col,id,data){try{await S.db.collection(col).doc(id).update(data);}catch(e){dbErr(e);}}
+async function del(col,id){try{await S.db.collection(col).doc(id).delete();}catch(e){dbErr(e);}}
+function subscribe(){
+  const fail=e=>{if(e&&e.code==="revoked"){S.dbState="error";}else S.dbState="error";render();};
+  S.db.collection("puestos").onSnapshot(s=>{S.puestos=s.docs.map(d=>Object.assign({id:d.id},d.data()));S.got.p=true;render();},fail);
+  S.db.collection("candidatos").onSnapshot(s=>{S.cands=s.docs.map(d=>{const x=Object.assign({id:d.id},d.data());x.ficha=x.ficha||{};return x;});S.got.c=true;render();},fail);
+  S.db.collection("evals").onSnapshot(s=>{const m={};s.docs.forEach(d=>m[d.id]=d.data());S.evals=m;S.got.e=true;render();},fail);
+  S.db.doc("config/empresa").onSnapshot(d=>{S.empresa=d.exists?d.data():null;render();},()=>{});
+  S.db.collection("pipeline").onSnapshot(s=>{const m={};s.docs.forEach(d=>m[d.id]=d.data());S.pipe=m;S.got.k=true;render();},fail);
+}
+
+/* ---------- IA ---------- */
+function anon(c){const f=c.ficha||{};return {id:c.codigo,barrio:f.zona,experiencias:f.experiencias,habilidades:f.habilidades,ingles:f.ingles,disponibilidad:f.disponibilidad,estudios:f.estudios,resumen:f.resumen};}
+function puestoAI(p){return {id:p.codigo,titulo:p.titulo,area:p.cliente,tipo:p.tipo,perfil_buscado:p.perfil,rubros_relevantes:p.rubros,experiencia_minima_anos:p.expMin,habilidades_excluyentes:p.habExcl,habilidades_deseables:p.habDes,ingles_minimo:p.inglesMin,turnos:p.turnos};}
+function aiErr(e){
+  const c=e&&e.code;
+  if(c==="cancelled"){toast("Se detuvo la tarea de IA.");return;}
+  if(["bad_key","no_credit","bad_model"].includes(c)){toast(e.message);return;}
+  if(["not_granted","sampling_disabled","not_declared","capability_disabled","capability_removed"].includes(c)){S.ai=null;render();toast("La IA no está configurada en el servidor o la clave no es válida. El resto de Perfilar sigue funcionando.");return;}
+  if(c==="rate_limited"){toast("Llegaste al límite de uso de Claude por ahora. Probá de nuevo en unos minutos.");return;}
+  if(c==="invalid_json"){toast("La IA respondió en un formato que no se pudo leer. Probá de nuevo.");return;}
+  if(c==="refused"){toast("La IA no quiso procesar este contenido. Revisá el texto cargado.");return;}
+  if(c==="image_rejected"){toast("La imagen no se pudo leer. Probá con otra foto o un PDF.");return;}
+  if(c==="prompt_too_large"){toast("El texto es demasiado largo. Pegá solo el contenido del CV.");return;}
+  if(c&&["invalid_argument","quota_exceeded","unavailable"].includes(c))return; /* error de base, ya avisado */
+  toast(e&&e.message&&e.code&&!/^HTTP/.test(e.message)?e.message:"No se pudo completar la tarea de IA. Probá de nuevo.");
+}
+async function runJob(label,fn){
+  if(JOB){toast("Esperá a que termine la tarea de IA en curso.");return false;}
+  const ctl=new AbortController();JOB={label,ctl};render();
+  try{await fn(ctl.signal);return true;}catch(e){aiErr(e);return false;}finally{JOB=null;render();}
+}
+async function evalPairs(pairs,signal){
+  let done=0;
+  for(let i=0;i<pairs.length;i+=6){
+    const chunk=pairs.slice(i,i+6);
+    JOB.label=`IA evaluando ${Math.min(i+chunk.length,pairs.length)} de ${pairs.length}`;renderJob();
+    const ps=[...new Map(chunk.map(x=>[x.p.id,x.p])).values()].map(puestoAI);
+    const cs=[...new Map(chunk.map(x=>[x.c.id,x.c])).values()].map(anon);
+    const prompt=`Sos analista de selección del área de Recursos Humanos de ${empresa()} (Montevideo, Uruguay).
+Evaluá el AJUSTE CUALITATIVO de cada candidato al puesto indicado: trayectoria, coherencia con el perfil buscado, actitud y potencial que se desprenden de su ficha.
+No vuelvas a evaluar lo que el sistema ya calcula con reglas (años mínimos, nivel de inglés, barrio, horarios y la lista de habilidades): concentrate en lo que una regla no puede ver.
+Los candidatos están anonimizados. No supongas edad, género ni nacionalidad.
+Escala entera de 1 a 10: 9-10 encaje excepcional; 7-8 buen encaje; 5-6 encaje parcial; 3-4 encaje débil; 1-2 no encaja.
+
+PUESTOS:
+${JSON.stringify(ps)}
+
+CANDIDATOS:
+${JSON.stringify(cs)}
+
+PARES A EVALUAR (candidato, puesto):
+${JSON.stringify(chunk.map(x=>[x.c.codigo,x.p.codigo]))}
+
+Respondé solo con un JSON array, un objeto por par, en el mismo orden:
+[{"candidato":"C-001","puesto":"P-01","puntaje":7,"justificacion":"una o dos oraciones","fortalezas":["frase corta"],"dudas":["frase corta"]}]
+Máximo 3 fortalezas y 3 dudas por par.`;
+    const res=await S.ai.json(prompt,{signal});
+    const arr=Array.isArray(res)?res:(res&&Array.isArray(res.evaluaciones)?res.evaluaciones:[]);
+    for(const x of chunk){
+      const o=arr.find(a=>a&&String(a.candidato)===x.c.codigo&&String(a.puesto)===x.p.codigo);
+      const pt=o?Math.round(+o.puntaje):NaN;if(!(pt>=1&&pt<=10))continue;
+      const k=pairKey(x.c.id,x.p.id);const prev=S.evals[k];
+      const doc={cid:x.c.id,pid:x.p.id,puntaje:pt,justificacion:String(o.justificacion||"").slice(0,600),
+        fortalezas:(Array.isArray(o.fortalezas)?o.fortalezas:[]).slice(0,3).map(String),dudas:(Array.isArray(o.dudas)?o.dudas:[]).slice(0,3).map(String),
+        firma:firma(x.c,x.p),fecha:new Date().toISOString(),preguntas:prev&&prev.firma===firma(x.c,x.p)?(prev.preguntas||[]):[]};
+      await put("evals",k,doc);done++;
+    }
+  }
+  if(done<pairs.length)toast(`La IA evaluó ${done} de ${pairs.length}. Podés reintentar los que faltan.`);
+  else toast(`Listo: ${done} ${done===1?"evaluación":"evaluaciones"} de IA guardadas.`);
+}
+function evalNow(pairs,label){if(!S.ai||!pairs.length)return;runJob(label||"IA evaluando",sig=>evalPairs(pairs,sig));}
+
+function extractPrompt(text){
+  return `Sos asistente de selección del área de Recursos Humanos de ${empresa()} (Montevideo, Uruguay). Convertí el currículum en una ficha estructurada.
+Reglas:
+- No incluyas edad, fecha de nacimiento, género, estado civil, nacionalidad, foto ni datos de contacto.
+- "zona": el barrio de Montevideo donde vive, exactamente uno de ${JSON.stringify(BARRIOS)}. Si vive en otro lugar o no se indica, "Otro".
+- "experiencias": cada trabajo con "puesto", "empresa", "rubro" (exactamente uno de ${JSON.stringify(RUBROS)}) y "anos" (número; 6 meses = 0.5). Las pasantías cuentan.
+- "habilidades": habilidades concretas, en español y cortas. Si una coincide con alguno de estos términos, usá exactamente el término: ${JSON.stringify(vocab())}.
+- "ingles": uno de "ninguno","basico","intermedio","avanzado","nativo". Si no se menciona, "ninguno".
+- "disponibilidad": subconjunto de ${JSON.stringify(TURNOS)}. "Full time" o "disponibilidad total" son los cuatro. Si no se menciona, [].
+- "estudios": una línea.
+- "resumen": dos oraciones sobre su trayectoria, sin datos personales.
+Respondé solo con JSON:
+{"nombre":"","zona":"","experiencias":[{"puesto":"","empresa":"","rubro":"","anos":0}],"habilidades":[],"ingles":"","disponibilidad":[],"estudios":"","resumen":""}
+
+CURRÍCULUM:
+${text?'"""\n'+text.slice(0,24000)+'\n"""':"Está en la imagen adjunta."}`;
+}
+function cleanFicha(o){
+  o=o&&typeof o==="object"?o:{};
+  const z=BARRIOS.find(b=>norm(b)===norm(o.zona))||"Otro";
+  return {nombre:String(o.nombre||"").slice(0,80),zona:z,
+    experiencias:(Array.isArray(o.experiencias)?o.experiencias:[]).slice(0,12).map(e=>({puesto:String(e&&e.puesto||"").slice(0,80),empresa:String(e&&e.empresa||"").slice(0,80),rubro:RUBROS.find(r=>norm(r)===norm(e&&e.rubro))||"otro",anos:Math.max(0,r1(+(e&&e.anos)||0))})),
+    habilidades:[...new Set((Array.isArray(o.habilidades)?o.habilidades:[]).map(s=>String(s).trim()).filter(Boolean))].slice(0,25),
+    ingles:ING.includes(norm(o.ingles))?norm(o.ingles):"ninguno",
+    disponibilidad:TURNOS.filter(t=>(Array.isArray(o.disponibilidad)?o.disponibilidad:[]).map(norm).includes(norm(t))),
+    estudios:String(o.estudios||"").slice(0,200),resumen:String(o.resumen||"").slice(0,500)};
+}
+
+/* ---------- modal: cargar CV ---------- */
+const CV={};
+function newCV(id){
+  const c=id?C(id):null;
+  Object.assign(CV,{step:c?2:1,id:c?c.id:null,text:c?c.cvTexto||"":"",postulo:c?c.postuloA||"":"",ficha:c?JSON.parse(JSON.stringify(c.ficha)):null,fuente:c?c.fuente||"texto":"texto",imgs:null,busy:"",fileName:"",err:""});
+  S.modal="cv";drawModal();
+}
+function cvBody(){
+  if(CV.step===1){
+    const busy=CV.busy;
+    return `
+    <label class="drop big${busy?" busy":""}" id="drop" for="cv_file">
+      <input type="file" id="cv_file" accept=".pdf,.docx,.txt,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain,image/png,image/jpeg,image/webp" ${busy?"disabled":""}>
+      <span class="mark lg" aria-hidden="true"><i style="height:60%"></i><i style="height:100%"></i><i style="height:45%"></i><i style="height:80%"></i><i style="height:65%"></i></span>
+      ${busy?`<h3>${esc(busy)}</h3><p class="small muted">${esc(CV.fileName)}</p>`
+        :`<h3>Subí el CV del candidato</h3><p class="muted">PDF, Word, foto o imagen. Arrastralo acá o</p><span class="btn pri">Elegir archivo</span><p class="small muted">La IA lo lee y arma la ficha sola. Después la revisás antes de guardarla.</p>`}
+    </label>
+    ${CV.err?`<p class="err">${esc(CV.err)}</p>`:""}`;
+  }
+  const f=CV.ficha||cleanFicha({});
+  return `
+    <p class="small muted">Revisá la ficha antes de guardarla. Podés corregir cualquier dato: el puntaje se calcula a partir de estos campos.</p>
+    <div class="fg">
+      <div class="field"><label for="f_nombre">Nombre</label><input type="text" id="f_nombre" value="${esc(f.nombre)}"></div>
+      <div class="field"><label for="f_zona">Barrio</label><select id="f_zona">${BARRIOS.map(b=>`<option ${b===f.zona?"selected":""}>${b}</option>`).join("")}</select></div>
+      <div class="field"><label for="f_ing">Inglés</label><select id="f_ing">${ING.map(i=>`<option value="${i}" ${i===f.ingles?"selected":""}>${INGL[i]}</option>`).join("")}</select></div>
+      <div class="field"><span class="lab">Disponibilidad</span><div class="checkrow">${TURNOS.map((t,i)=>`<label><input type="checkbox" id="f_t${i}" ${f.disponibilidad.includes(t)?"checked":""}>${t}</label>`).join("")}</div></div>
+      <div class="field full"><label for="f_hab">Habilidades</label><textarea id="f_hab" rows="2">${esc(f.habilidades.join(", "))}</textarea><span class="hint">Separadas por coma.</span></div>
+      <div class="field full"><label for="f_est">Estudios</label><input type="text" id="f_est" value="${esc(f.estudios)}"></div>
+      <div class="field full"><label for="f_res">Resumen</label><textarea id="f_res" rows="2">${esc(f.resumen)}</textarea></div>
+    </div>
+    <div class="stack"><div class="row between"><h4>Experiencia</h4><button class="btn sm" data-act="addExp">Agregar experiencia</button></div>
+      <div class="stack" id="exps">${f.experiencias.map(expRow).join("")||`<p class="small muted" id="noexp">Sin experiencias cargadas.</p>`}</div></div>
+    ${CV.id?"":`<div class="field"><label for="cv_post2">Se postuló a</label><select id="cv_post2"><option value="">Ninguna en particular (solo banco)</option>${openPuestos().map(p=>`<option value="${esc(p.id)}" ${CV.postulo===p.id?"selected":""}>${esc(p.titulo)} · ${esc(p.cliente)}</option>`).join("")}</select></div>`}
+    ${CV.err?`<p class="err">${esc(CV.err)}</p>`:""}`;
+}
+let expN=0;
+function expRow(e){const i=expN++;return `<div class="exprow" data-exp>
+  <input type="text" id="x_p${i}" placeholder="Puesto" value="${esc(e.puesto)}" aria-label="Puesto">
+  <input type="text" id="x_e${i}" placeholder="Empresa" value="${esc(e.empresa)}" aria-label="Empresa">
+  <select id="x_r${i}" aria-label="Rubro">${RUBROS.map(r=>`<option ${r===e.rubro?"selected":""}>${r}</option>`).join("")}</select>
+  <input type="number" id="x_a${i}" min="0" step="0.5" value="${esc(e.anos)}" aria-label="Años">
+  <button class="x" data-act="rmExp" aria-label="Quitar experiencia">×</button></div>`;}
+function readFicha(){
+  const exps=[...document.querySelectorAll("[data-exp]")].map(r=>{const [p,e,ru,a]=r.querySelectorAll("input,select");return {puesto:p.value.trim(),empresa:e.value.trim(),rubro:ru.value,anos:Math.max(0,r1(+a.value||0))};}).filter(x=>x.puesto||x.empresa);
+  return {nombre:$("#f_nombre").value.trim(),zona:$("#f_zona").value,experiencias:exps,
+    habilidades:[...new Set($("#f_hab").value.split(",").map(s=>s.trim()).filter(Boolean))],ingles:$("#f_ing").value,
+    disponibilidad:TURNOS.filter((t,i)=>$("#f_t"+i).checked),estudios:$("#f_est").value.trim(),resumen:$("#f_res").value.trim()};
+}
+async function loadScript(src){return new Promise((res,rej)=>{const s=document.createElement("script");s.src=src;s.onload=res;s.onerror=()=>rej(new Error("No se pudo cargar "+src));document.head.appendChild(s);});}
+async function pdfText(file){
+  await loadPdfjs();
+  const doc=await window.pdfjsLib.getDocument({data:new Uint8Array(await file.arrayBuffer()),isEvalSupported:false}).promise;
+  const out=[];for(let i=1;i<=Math.min(doc.numPages,6);i++){const pg=await doc.getPage(i);const tc=await pg.getTextContent();out.push(tc.items.map(it=>it.str+(it.hasEOL?"\n":" ")).join(""));}
+  return out.join("\n").replace(/[ \t]+\n/g,"\n").trim();
+}
+async function loadPdfjs(){if(!window.pdfjsLib){await loadScript(PDFJS+"pdf.worker.min.js");await loadScript(PDFJS+"pdf.min.js");window.pdfjsLib.GlobalWorkerOptions.workerSrc=PDFJS+"pdf.worker.min.js";}}
+/* PDF escaneado: dibuja las primeras páginas como imágenes para que la IA las lea */
+async function pdfImages(file,max){
+  await loadPdfjs();
+  const doc=await window.pdfjsLib.getDocument({data:new Uint8Array(await file.arrayBuffer()),isEvalSupported:false}).promise;
+  const out=[];
+  for(let i=1;i<=Math.min(doc.numPages,max);i++){
+    const pg=await doc.getPage(i);const vp=pg.getViewport({scale:1.6});
+    const cv=document.createElement("canvas");cv.width=Math.floor(vp.width);cv.height=Math.floor(vp.height);
+    const ctx=cv.getContext("2d");ctx.fillStyle="#fff";ctx.fillRect(0,0,cv.width,cv.height);
+    await pg.render({canvasContext:ctx,viewport:vp}).promise;
+    out.push(await new Promise(r=>cv.toBlob(r,"image/jpeg",0.85)));
+  }
+  return out.filter(Boolean);
+}
+async function docxText(file){
+  if(!window.mammoth)await loadScript("https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js");
+  const r=await window.mammoth.extractRawText({arrayBuffer:await file.arrayBuffer()});
+  return String(r.value||"").trim();
+}
+async function takeFile(file){
+  if(!file||CV.busy)return;
+  CV.err="";CV.imgs=null;CV.text="";CV.fileName=file.name;
+  const name=file.name.toLowerCase();
+  let maxImg=3;
+  try{const l=S.ai&&S.aiImg?await S.ai.limits():null;if(l&&l.images)maxImg=Math.max(1,Math.min(3,l.images.maxCount));}catch(e){}
+  CV.busy="Leyendo el archivo…";drawModal();
+  try{
+    if(name.endsWith(".pdf")||file.type==="application/pdf"){
+      const t=await pdfText(file);
+      if(t.length>=40){CV.text=t;CV.fuente="pdf";}
+      else if(S.aiImg){CV.imgs=await pdfImages(file,maxImg);CV.fuente="pdf escaneado";}
+      else throw {msg:"Este PDF es una imagen escaneada y esta vista no puede leer imágenes. Probá con un PDF con texto o un Word."};
+    }else if(name.endsWith(".docx")){
+      CV.text=await docxText(file);CV.fuente="word";
+      if(CV.text.length<40)throw {msg:"El Word está vacío o no se pudo leer. Probá exportarlo a PDF."};
+    }else if(name.endsWith(".doc")){
+      throw {msg:"Los archivos .doc antiguos no se pueden leer. Guardalo como .docx o PDF y volvé a subirlo."};
+    }else if(/^image\//.test(file.type)){
+      if(!S.aiImg)throw {msg:"Esta vista no puede leer imágenes. Subí el CV en PDF o Word."};
+      CV.imgs=[file];CV.fuente="imagen";
+    }else if(file.type.startsWith("text/")||name.endsWith(".txt")){
+      CV.text=(await file.text()).slice(0,30000).trim();CV.fuente="texto";
+      if(CV.text.length<40)throw {msg:"El archivo está vacío."};
+    }else throw {msg:"Ese tipo de archivo no se puede leer. Subí el CV en PDF, Word o como imagen."};
+  }catch(e){CV.busy="";CV.err=e&&e.msg?e.msg:"No se pudo leer el archivo. Probá con otro formato (PDF, Word o imagen).";drawModal();return;}
+  if(!S.ai){CV.busy="";CV.ficha=cleanFicha({});CV.step=2;CV.err="La IA no está activada en el servidor: falta la variable ANTHROPIC_API_KEY en Render. Podés completar la ficha a mano o revisar /diagnostico.";drawModal();return;}
+  CV.busy="La IA está leyendo el CV y armando la ficha…";drawModal();
+  await analyzeCV();
+}
+async function analyzeCV(){
+  await runJob("IA leyendo el CV",async sig=>{
+    const opts={signal:sig};if(CV.imgs&&CV.imgs.length)opts.images=CV.imgs;
+    const o=await S.ai.json(extractPrompt(CV.imgs&&CV.imgs.length?"":CV.text),opts);
+    CV.ficha=cleanFicha(o);CV.step=2;CV.err="";
+    if(!CV.text)CV.text="(CV cargado como "+CV.fuente+": "+CV.fileName+")";
+  });
+  CV.busy="";
+  if(CV.step===1&&!CV.err)CV.err="No se pudo leer el CV. Probá subirlo de nuevo.";
+  if(S.modal==="cv")drawModal();
+}
+async function saveCV(){
+  const f=readFicha();
+  if(!f.nombre){CV.err="Falta el nombre del candidato.";drawModal();return;}
+  const post=CV.id?CV.postulo:($("#cv_post2")?$("#cv_post2").value:CV.postulo);
+  $("#saveCV").disabled=true;
+  try{
+    let id=CV.id;
+    if(id){await upd("candidatos",id,{ficha:f});}
+    else{id=S.db.collection("candidatos").doc().id;await put("candidatos",id,{codigo:nextCode(S.cands,"C-",3),ficha:f,cvTexto:CV.text.slice(0,20000),postuloA:post,fuente:CV.fuente,creado:new Date().toISOString()});}
+    closeModal();toast(CV.id?"Ficha actualizada.":"CV guardado en el banco.");
+    S.drawer={type:"cand",cid:id};
+    setTimeout(()=>{const c=C(id);if(c)evalNow(pending((x)=>x.id===id),"IA evaluando el CV");},400);
+  }catch(e){const b=$("#saveCV");if(b)b.disabled=false;}
+}
+
+/* ---------- modal: vacante ---------- */
+const PQ={};
+function newPuesto(id){const p=id?P(id):null;Object.assign(PQ,{id:p?p.id:null,err:"",armed:false,d:p?JSON.parse(JSON.stringify(p)):{titulo:"",cliente:"",tipo:"masiva",vacantes:1,zona:"Centro",rubros:[],expMin:1,inglesMin:"ninguno",inglesExcl:false,habExcl:[],habDes:[],turnos:[],turnosExcl:false,perfil:"",pesos:Object.assign({},PESOS_DEF.masiva)}});S.modal="puesto";drawModal();}
+function puestoBody(){
+  const d=PQ.d;const w=d.pesos||PESOS_DEF[d.tipo];const sum=CRIT.reduce((a,[k])=>a+(+w[k]||0),0);
+  return `<div class="fg">
+    <div class="field"><label for="q_tit">Puesto</label><input type="text" id="q_tit" value="${esc(d.titulo)}" placeholder="Ej.: Analista de datos"></div>
+    <div class="field"><label for="q_cli">Área o sucursal</label><input type="text" id="q_cli" value="${esc(d.cliente)}" placeholder="Ej.: Sucursal Malvín, Administración"></div>
+    <div class="field"><span class="lab">Tipo de vacante</span><div class="checkrow"><label><input type="radio" name="q_tipo" id="q_tm" value="masiva" ${d.tipo==="masiva"?"checked":""}>Masiva</label><label><input type="radio" name="q_tipo" id="q_te" value="especializada" ${d.tipo==="especializada"?"checked":""}>Especializada</label></div><span class="hint">Cambiar el tipo carga sus pesos por defecto.</span></div>
+    <div class="field"><label for="q_vac">Vacantes</label><input type="number" id="q_vac" min="1" value="${esc(d.vacantes)}"></div>
+    <div class="field"><label for="q_zona">Ubicación del puesto</label><select id="q_zona"><option ${d.zona==="Remoto"?"selected":""}>Remoto</option>${BARRIOS.filter(b=>b!=="Otro").map(b=>`<option ${b===d.zona?"selected":""}>${b}</option>`).join("")}</select></div>
+    <div class="field"><label for="q_exp">Experiencia mínima (años)</label><input type="number" id="q_exp" min="0" step="0.5" value="${esc(d.expMin)}"></div>
+    <div class="field full"><span class="lab">Rubros que cuentan como experiencia</span><div class="checkrow">${RUBROS.map((r,i)=>`<label><input type="checkbox" id="q_r${i}" ${(d.rubros||[]).includes(r)?"checked":""}>${r}</label>`).join("")}</div></div>
+    <div class="field"><label for="q_ing">Inglés mínimo</label><select id="q_ing">${ING.map(i=>`<option value="${i}" ${i===d.inglesMin?"selected":""}>${INGL[i]}</option>`).join("")}</select><label class="small" style="font-weight:400;display:flex;gap:6px;align-items:center"><input type="checkbox" id="q_ingx" ${d.inglesExcl?"checked":""}> Es excluyente</label></div>
+    <div class="field"><span class="lab">Turnos que debe cubrir</span><div class="checkrow">${TURNOS.map((t,i)=>`<label><input type="checkbox" id="q_t${i}" ${(d.turnos||[]).includes(t)?"checked":""}>${t}</label>`).join("")}</div><label class="small" style="font-weight:400;display:flex;gap:6px;align-items:center"><input type="checkbox" id="q_tx" ${d.turnosExcl?"checked":""}> Es excluyente</label></div>
+    <div class="field"><label for="q_hx">Habilidades excluyentes</label><textarea id="q_hx" rows="2" placeholder="Ej.: SQL, Excel">${esc((d.habExcl||[]).join(", "))}</textarea><span class="hint">Si falta una, el CV queda no apto.</span></div>
+    <div class="field"><label for="q_hd">Habilidades deseables</label><textarea id="q_hd" rows="2" placeholder="Ej.: Power BI, Python">${esc((d.habDes||[]).join(", "))}</textarea><span class="hint">Separadas por coma.</span></div>
+    <div class="field full"><label for="q_perf">Perfil buscado</label><textarea id="q_perf" rows="3" placeholder="Qué tipo de persona necesita el área. La IA usa este texto para evaluar el ajuste.">${esc(d.perfil)}</textarea></div>
+    <div class="field full"><span class="lab">Pesos del puntaje <span class="muted" id="q_sum" style="font-weight:400">· suman ${sum}%</span></span><div class="wgrid">${CRIT.map(([k,l])=>`<div class="field"><label for="q_w_${k}" class="small" style="font-weight:500">${esc(l)}</label><input type="number" id="q_w_${k}" min="0" max="100" value="${esc(w[k])}"></div>`).join("")}</div></div>
+  </div>${PQ.err?`<p class="err">${esc(PQ.err)}</p>`:""}`;
+}
+function readPuesto(){
+  const list=s=>[...new Set(s.split(",").map(x=>x.trim()).filter(Boolean))];
+  const tipo=$("#q_te").checked?"especializada":"masiva";
+  return {titulo:$("#q_tit").value.trim(),cliente:$("#q_cli").value.trim(),tipo,vacantes:Math.max(1,parseInt($("#q_vac").value,10)||1),zona:$("#q_zona").value,
+    rubros:RUBROS.filter((r,i)=>$("#q_r"+i).checked),expMin:Math.max(0,r1(+$("#q_exp").value||0)),inglesMin:$("#q_ing").value,inglesExcl:$("#q_ingx").checked,
+    habExcl:list($("#q_hx").value),habDes:list($("#q_hd").value),turnos:TURNOS.filter((t,i)=>$("#q_t"+i).checked),turnosExcl:$("#q_tx").checked,perfil:$("#q_perf").value.trim(),
+    pesos:Object.fromEntries(CRIT.map(([k])=>[k,Math.max(0,parseInt($("#q_w_"+k).value,10)||0)]))};
+}
+async function savePuesto(){
+  const d=readPuesto();const sum=CRIT.reduce((a,[k])=>a+d.pesos[k],0);
+  if(!d.titulo||!d.cliente){PQ.err="Completá el puesto y el área.";PQ.d=d;drawModal();return;}
+  if(sum!==100){PQ.err=`Los pesos tienen que sumar 100%. Ahora suman ${sum}%.`;PQ.d=d;drawModal();return;}
+  if(!d.perfil){PQ.err="Escribí el perfil buscado: la IA lo usa para evaluar.";PQ.d=d;drawModal();return;}
+  $("#savePuesto").disabled=true;
+  try{
+    let id=PQ.id;
+    if(id){await upd("puestos",id,d);}
+    else{id=S.db.collection("puestos").doc().id;await put("puestos",id,Object.assign({codigo:nextCode(S.puestos,"P-",2),estado:"abierta",creado:new Date().toISOString()},d));}
+    closeModal();S.view="busquedas";S.sel=id;S.showNo=false;render();toast(PQ.id?"Vacante actualizada.":"Vacante creada. El banco de CVs ya está rankeado.");
+    setTimeout(()=>evalNow(pending((c,p)=>p.id===id),"IA evaluando la vacante"),400);
+  }catch(e){const b=$("#savePuesto");if(b)b.disabled=false;}
+}
+
+/* ---------- modal: informe ---------- */
+let INF={text:"",ctl:null};
+function md(t){
+  const out=[];let ul=false;
+  const inl=s=>esc(s).replace(/\*\*(.+?)\*\*/g,"<b>$1</b>");
+  for(const raw of t.split("\n")){const l=raw.trim();
+    if(/^[-•*] /.test(l)){if(!ul){out.push("<ul>");ul=true;}out.push("<li>"+inl(l.replace(/^[-•*] /,""))+"</li>");continue;}
+    if(ul){out.push("</ul>");ul=false;}
+    if(!l)continue;
+    if(/^### /.test(l))out.push("<h4>"+inl(l.slice(4))+"</h4>");
+    else if(/^##? /.test(l))out.push("<h3>"+inl(l.replace(/^##? /,""))+"</h3>");
+    else out.push("<p>"+inl(l)+"</p>");}
+  if(ul)out.push("</ul>");return out.join("");
+}
+async function informe(pid){
+  const p=P(pid);const rk=rankFor(p);const ap=rk.filter(x=>x.r.apto);
+  if(!ap.length){toast("Ningún CV cumple los excluyentes: no hay terna para informar.");return;}
+  INF={text:"",pid};S.modal="informe";drawModal();
+  const data={puesto:puestoAI(p),cvs_analizados:rk.length,cvs_que_cumplen_excluyentes:ap.length,
+    finalistas:ap.slice(0,3).map(x=>{const ev=evalOf(x.c,p);return {nombre:nameOf(x.c),puntaje:x.r.total,puntajes_por_criterio:x.r.sub,habilidades_que_cumple:x.r.det.excl.concat(x.r.det.des).filter(h=>h.ok).map(h=>h.s),habilidades_que_faltan:x.r.det.excl.concat(x.r.det.des).filter(h=>!h.ok).map(h=>h.s),resumen:x.c.ficha.resumen,evaluacion_ia:ev?{puntaje:ev.puntaje,justificacion:ev.justificacion,fortalezas:ev.fortalezas,dudas:ev.dudas}:null};})};
+  const prompt=`Sos analista senior de Recursos Humanos de ${empresa()}. Redactá un informe breve para el responsable de ${p.cliente} sobre la vacante "${p.titulo}", presentando a los finalistas. Usá solo los datos de abajo y no inventes experiencia ni logros.
+Escribí en español rioplatense profesional, con este formato exacto:
+## Resumen de la vacante
+(2 o 3 oraciones: cuántos CVs se analizaron y cuántos cumplieron los excluyentes)
+## Finalistas
+Para cada finalista: una línea "### Nombre · puntaje/100", luego 2 o 3 viñetas con "- " sobre fortalezas, y una viñeta que empiece con "**A validar en entrevista:**".
+## Recomendación
+(2 oraciones)
+
+DATOS:
+${JSON.stringify(data)}`;
+  const ok=await runJob("IA redactando el informe",async sig=>{INF.ctl=sig;await S.ai(prompt,{signal:sig,onText:({text})=>{INF.text=text;const b=$("#infBody");if(b)b.innerHTML=md(text);}});});
+  if(!ok&&S.modal==="informe"&&!INF.text){closeModal();}
+  else if(S.modal==="informe")drawModal();
+}
+
+/* ---------- modal genérico ---------- */
+function drawModal(){
+  const m=$("#modal");
+  if(!S.modal){m.hidden=true;m.innerHTML="";return;}
+  let h="",b="",f="";
+  if(S.modal==="cv"){
+    h=CV.id?"Editar ficha":CV.step===1?"Subir CV":"Revisar ficha";
+    b=cvBody();
+    f=CV.step===1?`<button class="btn ghost" data-act="closeModal">Cancelar</button>${S.ai?"":`<button class="btn" data-act="manualCV">Completar a mano</button>`}`
+      :`${CV.id?"":`<button class="btn ghost" data-act="backCV">Subir otro archivo</button>`}<button class="btn pri" id="saveCV" data-act="saveCV">${CV.id?"Guardar cambios":"Guardar en el banco"}</button>`;
+  }else if(S.modal==="puesto"){
+    h=PQ.id?"Editar vacante":"Nueva vacante";b=puestoBody();
+    f=`${PQ.id?`<button class="btn danger${PQ.armed?" armed":""}" data-act="delPuesto" style="margin-right:auto">${PQ.armed?"Confirmar: eliminar vacante":"Eliminar vacante"}</button>`:""}<button class="btn ghost" data-act="closeModal">Cancelar</button><button class="btn pri" id="savePuesto" data-act="savePuesto">${PQ.id?"Guardar cambios":"Crear vacante"}</button>`;
+  }else if(S.modal==="empresa"){
+    h="Configuración de la empresa";
+    b=`<p class="small muted">Perfilar funciona para cualquier empresa. Este nombre aparece en el panel y en los informes que redacta la IA.</p><div class="field"><label for="e_nom">Nombre de la empresa</label><input type="text" id="e_nom" value="${esc(S.empresa&&S.empresa.nombre||"")}" placeholder="Ej.: Supermercados La Huerta"></div>${S.empErr?`<p class="err">${esc(S.empErr)}</p>`:""}`;
+    f=`<button class="btn ghost" data-act="closeModal">Cancelar</button><button class="btn pri" data-act="saveEmpresa" ${!S.db||S.readonly?"disabled":""}>Guardar</button>`;
+  }else if(S.modal==="informe"){
+    const p=P(INF.pid);h="Informe para "+(p?p.cliente:"el área");
+    b=`<div class="report" id="infBody">${INF.text?md(INF.text):`<p class="muted">La IA está redactando el informe con la terna de finalistas…</p>`}</div>`;
+    f=`<button class="btn ghost" data-act="closeModal">Cerrar</button><button class="btn pri" data-act="copyInf" ${INF.text&&!JOB?"":"disabled"}>Copiar texto</button>`;
+  }
+  m.innerHTML=`<div class="scrim" data-act="closeModal"></div><div class="dlg" role="dialog" aria-modal="true" aria-labelledby="mTitle"><div class="dlg-h"><h2 id="mTitle">${esc(h)}</h2><button class="x" data-act="closeModal" aria-label="Cerrar">×</button></div><div class="dlg-b">${b}</div><div class="dlg-f">${f}</div></div>`;
+  m.hidden=false;
+}
+function closeModal(){if((S.modal==="informe"||(S.modal==="cv"&&CV.busy))&&JOB)JOB.ctl.abort();if(S.modal==="cv")CV.busy="";S.modal=null;drawModal();}
+
+/* ---------- acciones ---------- */
+const ACT={
+  go:(t,e)=>{e.preventDefault();S.view=t.dataset.v;S.drawer=null;try{history.replaceState(null,"","#"+S.view);}catch(x){}render();window.scrollTo(0,0);},
+  openP:t=>{S.view="busquedas";S.sel=t.dataset.p;S.showNo=false;render();window.scrollTo(0,0);},
+  selP:t=>{S.sel=t.dataset.p;S.showNo=false;render();},
+  toggleNo:()=>{S.showNo=!S.showNo;render();},
+  pair:(t,e)=>{if(e.target.closest("select"))return;S.drawer={type:"pair",cid:t.dataset.c,pid:t.dataset.p};render();},
+  cand:t=>{S.drawer={type:"cand",cid:t.dataset.c};render();},
+  closeDrawer:()=>{S.drawer=null;render();},
+  newCV:()=>newCV(),editCV:t=>newCV(t.dataset.c),
+  manualCV:()=>{CV.ficha=cleanFicha({});CV.step=2;CV.err="";drawModal();},
+  backCV:()=>{Object.assign(CV,{step:1,ficha:null,text:"",imgs:null,fileName:"",err:"",busy:""});drawModal();},
+  addExp:()=>{const n=$("#noexp");if(n)n.remove();$("#exps").insertAdjacentHTML("beforeend",expRow({puesto:"",empresa:"",rubro:"otro",anos:1}));},
+  rmExp:t=>t.closest("[data-exp]").remove(),
+  saveCV:()=>saveCV(),
+  delCV:async t=>{
+    if(!t.classList.contains("armed")){t.classList.add("armed");t.textContent="Confirmar: eliminar";setTimeout(()=>{if(t.isConnected){t.classList.remove("armed");t.textContent="Eliminar del banco";}},5000);return;}
+    const id=t.dataset.c;S.drawer=null;
+    try{await del("candidatos",id);for(const k of Object.keys(S.evals))if(S.evals[k].cid===id)await del("evals",k);for(const k of Object.keys(S.pipe))if(S.pipe[k].cid===id)await del("pipeline",k);toast("CV eliminado del banco.");}catch(e){}
+    render();},
+  newPuesto:()=>newPuesto(),editP:t=>newPuesto(t.dataset.p),savePuesto:()=>savePuesto(),
+  delPuesto:async()=>{if(!PQ.armed){PQ.d=readPuesto();PQ.armed=true;drawModal();return;}const id=PQ.id;closeModal();
+    try{await del("puestos",id);for(const k of Object.keys(S.evals))if(S.evals[k].pid===id)await del("evals",k);for(const k of Object.keys(S.pipe))if(S.pipe[k].pid===id)await del("pipeline",k);toast("Vacante eliminada.");}catch(e){}},
+  toggleP:async t=>{const p=P(t.dataset.p);try{await upd("puestos",p.id,{estado:p.estado==="cerrada"?"abierta":"cerrada"});toast(p.estado==="cerrada"?"Vacante reabierta.":"Vacante cerrada.");}catch(e){}},
+  evalAll:()=>evalNow(pending(),"IA evaluando pendientes"),
+  evalP:t=>evalNow(pending((c,p)=>p.id===t.dataset.p),"IA evaluando la vacante"),
+  evalPair:t=>{const c=C(t.dataset.c),p=P(t.dataset.p);S.drawer.keep=true;evalNow([{c,p}],"IA evaluando el par");},
+  preguntas:t=>{const c=C(t.dataset.c),p=P(t.dataset.p);S.drawer.keep=true;
+    runJob("IA preparando preguntas",async sig=>{
+      const r=match(c,p),ev=evalOf(c,p);
+      const prompt=`Sos entrevistador/a del área de Recursos Humanos de ${empresa()}. Proponé 3 preguntas de entrevista para validar a este candidato para el puesto. Enfocate en sus puntos débiles, en lo que falta validar y en lo que pide el perfil buscado. Preguntas abiertas y de comportamiento: que pidan ejemplos reales.
+PUESTO: ${JSON.stringify(puestoAI(p))}
+CANDIDATO (anonimizado): ${JSON.stringify(anon(c))}
+HABILIDADES QUE LE FALTAN: ${JSON.stringify(r.det.excl.concat(r.det.des).filter(h=>!h.ok).map(h=>h.s))}
+DUDAS DE LA EVALUACIÓN: ${JSON.stringify(ev?ev.dudas:[])}
+Respondé solo con JSON: [{"pregunta":"...","objetivo":"qué valida, en pocas palabras"}]`;
+      const arr=await S.ai.json(prompt,{signal:sig,cache:false});
+      const qs=(Array.isArray(arr)?arr:[]).filter(q=>q&&q.pregunta).slice(0,3).map(q=>({pregunta:String(q.pregunta).slice(0,400),objetivo:String(q.objetivo||"").slice(0,200)}));
+      if(!qs.length)throw {code:"invalid_json"};
+      await upd("evals",pairKey(c.id,p.id),{preguntas:qs});toast("Preguntas guardadas.");
+    });},
+  informe:t=>informe(t.dataset.p),
+  empresa:()=>{S.empErr="";S.modal="empresa";drawModal();},
+  saveEmpresa:async()=>{const n=$("#e_nom").value.trim();if(!n){S.empErr="Escribí el nombre de la empresa.";drawModal();return;}try{await put("config","empresa",{nombre:n.slice(0,80)});closeModal();toast("Empresa guardada.");}catch(e){}},
+  copyInf:async t=>{try{await navigator.clipboard.writeText(INF.text);toast("Informe copiado.");}catch(e){const r=document.createRange();r.selectNodeContents($("#infBody"));const s=getSelection();s.removeAllRanges();s.addRange(r);toast("Texto seleccionado: copialo con Ctrl+C o Cmd+C.");}},
+  stopJob:()=>{if(JOB)JOB.ctl.abort();},
+  closeModal:()=>closeModal(),
+};
+document.addEventListener("click",e=>{const t=e.target.closest("[data-act]");if(!t)return;const f=ACT[t.dataset.act];if(f)f(t,e);});
+document.addEventListener("change",async e=>{
+  const t=e.target;
+  if(t.matches("[data-etapa]")){const k=t.dataset.etapa;try{await put("pipeline",k,{cid:t.dataset.c,pid:t.dataset.p,etapa:t.value,fecha:new Date().toISOString()});toast("Etapa: "+ETL[t.value]+".");}catch(x){}return;}
+  if(t.id==="ciego"){S.ciego=t.checked;try{localStorage.setItem("perfilar.ciego",S.ciego?"1":"0");}catch(x){}render();return;}
+  if(t.id==="cv_file"){takeFile(t.files[0]);return;}
+  if(t.name==="q_tipo"){const w=PESOS_DEF[t.value];CRIT.forEach(([k])=>{$("#q_w_"+k).value=w[k];});sumW();return;}
+});
+function sumW(){const s=CRIT.reduce((a,[k])=>a+(parseInt($("#q_w_"+k).value,10)||0),0);const el=$("#q_sum");if(el){el.textContent="· suman "+s+"%";el.style.color=s===100?"":"var(--bad)";}}
+document.addEventListener("input",e=>{
+  if(e.target.id==="q"){S.q=e.target.value;$("#bancoList").innerHTML=bancoList();}
+  if(e.target.id&&e.target.id.startsWith("q_w_"))sumW();
+});
+document.addEventListener("dragover",e=>{const d=e.target.closest&&e.target.closest("#drop");if(d){e.preventDefault();d.classList.add("over");}});
+document.addEventListener("dragleave",e=>{const d=e.target.closest&&e.target.closest("#drop");if(d)d.classList.remove("over");});
+document.addEventListener("drop",e=>{const d=e.target.closest&&e.target.closest("#drop");if(d){e.preventDefault();d.classList.remove("over");takeFile(e.dataTransfer.files[0]);}});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"){if(S.modal)closeModal();else if(S.drawer){S.drawer=null;render();}}});
+
+/* ---------- arranque ---------- */
+(async()=>{
+  try{S.ciego=localStorage.getItem("perfilar.ciego")==="1";}catch(e){}
+  const h=location.hash.slice(1);if(VIEWS[h])S.view=h;
+  render();
+  if(!window.claude||!window.claude.use){S.dbState="sin";render();return;}
+  const [db,ai]=await Promise.all([window.claude.use("db"),window.claude.use("sample")]);
+  S.ai=ai||null;
+  if(ai){try{const l=await ai.limits();S.aiImg=!!(l&&l.images);}catch(e){}}
+  if(!db){S.dbState="sin";render();return;}
+  S.db=db;S.dbState="ok";subscribe();render();
+})();
+</script>
+
+</body>
+</html>
