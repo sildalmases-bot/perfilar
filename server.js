@@ -1,12 +1,17 @@
 // Perfilar · servidor para Render
-// Sirve la web, guarda los datos (Postgres o archivo local) y hace de puente con la IA de Anthropic.
+// Sirve la web, guarda los datos (Postgres o archivo local) y hace de puente con la IA (Google Gemini gratis, o Anthropic).
 const express = require("express");
 const path = require("path");
 const fs = require("fs");
 
 const PORT = process.env.PORT || 3000;
-const KEY = process.env.ANTHROPIC_API_KEY || "";
-const MODEL = process.env.ANTHROPIC_MODEL || "claude-sonnet-5-5";
+const GEMINI_KEY = (process.env.GEMINI_API_KEY || "").trim();
+const ANTHROPIC_KEY = (process.env.ANTHROPIC_API_KEY || "").trim();
+// Si hay clave de Gemini se usa Gemini (tiene plan gratis); si no, Anthropic.
+const PROVIDER = GEMINI_KEY ? "gemini" : ANTHROPIC_KEY ? "anthropic" : "";
+const KEY = GEMINI_KEY || ANTHROPIC_KEY;
+const MODEL = PROVIDER === "gemini" ? (process.env.GEMINI_MODEL || "gemini-3.1-flash-lite") : (process.env.ANTHROPIC_MODEL || "claude-sonnet-5-5");
+const GEMINI_BASE = (process.env.GEMINI_BASE_URL || "https://generativelanguage.googleapis.com").replace(/\/$/, "");
 const PASS = process.env.APP_PASSWORD || "";
 const API_BASE = (process.env.ANTHROPIC_BASE_URL || "https://api.anthropic.com").replace(/\/$/, "");
 let DB_KIND = "archivo";
@@ -88,7 +93,7 @@ async function seedIfEmpty() {
 // ---------- API de datos ----------
 const valid = (col, id) => COLS.includes(col) && SAFE.test(id);
 
-app.get("/api/config", (req, res) => res.json({ ai: !!KEY, model: MODEL }));
+app.get("/api/config", (req, res) => res.json({ ai: !!KEY, provider: PROVIDER, model: MODEL }));
 
 app.get("/api/sync", async (req, res) => {
   try {
@@ -124,61 +129,100 @@ app.delete("/api/db/:col/:id", async (req, res) => {
   catch (e) { console.error(e); res.status(500).send("Error de base de datos"); }
 });
 
-// ---------- IA (Anthropic) ----------
-app.post("/api/ai", async (req, res) => {
-  if (!KEY) return res.status(503).json({ code: "sampling_disabled", message: "Falta configurar ANTHROPIC_API_KEY en Render." });
-  const { input, json, images = [] } = req.body || {};
-  const text = typeof input === "string" ? input : Array.isArray(input) ? input.map((m) => m.content).join("\n\n") : "";
-  if (!text) return res.status(400).json({ code: "invalid_request", message: "Falta el texto." });
+// ---------- IA ----------
+// Devuelve {ok:true,text,truncated} o {ok:false,status,code,message}
+async function callAI(text, images, json, maxTokens) {
+  if (PROVIDER === "gemini") return callGemini(text, images, json, maxTokens);
+  return callAnthropic(text, images, json, maxTokens);
+}
+
+async function callGemini(text, images, json, maxTokens) {
+  const parts = [];
+  images.forEach((im, i) => {
+    if (images.length > 1) parts.push({ text: `Página ${i + 1}:` });
+    parts.push({ inline_data: { mime_type: im.type, data: im.data } });
+  });
+  parts.push({ text });
+  const body = { contents: [{ role: "user", parts }], generationConfig: { maxOutputTokens: maxTokens } };
+  if (json) body.generationConfig.responseMimeType = "application/json";
+  const url = `${GEMINI_BASE}/v1beta/models/${encodeURIComponent(MODEL)}:generateContent?key=${encodeURIComponent(GEMINI_KEY)}`;
+  let r, j;
+  try {
+    r = await fetch(url, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
+    j = await r.json().catch(() => ({}));
+  } catch (e) { return { ok: false, status: 0, code: "upstream_error", message: "No se pudo contactar a Gemini: " + e.message }; }
+  if (!r.ok) {
+    const msg = (j.error && j.error.message) || "";
+    console.error("Error de Gemini:", r.status, msg);
+    if (/API key not valid|API_KEY_INVALID|permission|unauthenticated/i.test(msg) || r.status === 401 || r.status === 403)
+      return { ok: false, status: r.status, code: "bad_key", message: "La clave GEMINI_API_KEY no es válida. Creá una nueva en aistudio.google.com y pegala en Render → Environment." };
+    if (r.status === 429)
+      return { ok: false, status: r.status, code: "rate_limited", message: "Se alcanzó el límite gratis de Gemini. Esperá un minuto; si sigue, el cupo diario se renueva al otro día." };
+    if (r.status === 404 || /model/i.test(msg))
+      return { ok: false, status: r.status, code: "bad_model", message: "El modelo " + MODEL + " no está disponible en Gemini. Cambiá GEMINI_MODEL en Render por uno que figure en aistudio.google.com." };
+    if (/location|region|not supported/i.test(msg))
+      return { ok: false, status: r.status, code: "upstream_error", message: "Gemini no está disponible desde esta región: " + msg };
+    return { ok: false, status: r.status, code: "upstream_error", message: "Gemini devolvió un error (" + r.status + "): " + msg };
+  }
+  const cand = (j.candidates || [])[0];
+  if (!cand) {
+    const why = j.promptFeedback && j.promptFeedback.blockReason;
+    return { ok: false, status: 200, code: why ? "refused" : "empty_completion", message: why ? "Gemini bloqueó el contenido (" + why + ")." : "Gemini no devolvió respuesta." };
+  }
+  const out = ((cand.content && cand.content.parts) || []).filter((p) => !p.thought && typeof p.text === "string").map((p) => p.text).join("");
+  if (!out.trim()) return { ok: false, status: 200, code: cand.finishReason === "SAFETY" ? "refused" : "empty_completion", message: "Gemini no devolvió texto (" + (cand.finishReason || "sin motivo") + ")." };
+  return { ok: true, text: out, truncated: cand.finishReason === "MAX_TOKENS" };
+}
+
+async function callAnthropic(text, images, json, maxTokens) {
   const content = [];
-  images.slice(0, 5).forEach((im, i) => {
+  images.forEach((im, i) => {
     if (images.length > 1) content.push({ type: "text", text: `Página ${i + 1}:` });
     content.push({ type: "image", source: { type: "base64", media_type: im.type, data: im.data } });
   });
   content.push({ type: "text", text });
-  const body = { model: MODEL, max_tokens: 8000, messages: [{ role: "user", content }] };
+  const body = { model: MODEL, max_tokens: maxTokens, messages: [{ role: "user", content }] };
   if (json) body.system = "Respondé únicamente con JSON válido, sin texto antes ni después y sin bloques de código.";
+  let r, j;
   try {
-    const r = await fetch(API_BASE + "/v1/messages", {
+    r = await fetch(API_BASE + "/v1/messages", {
       method: "POST",
-      headers: { "x-api-key": KEY, "anthropic-version": "2023-06-01", "content-type": "application/json" },
+      headers: { "x-api-key": ANTHROPIC_KEY, "anthropic-version": "2023-06-01", "content-type": "application/json" },
       body: JSON.stringify(body),
     });
-    const j = await r.json().catch(() => ({}));
-    if (!r.ok) {
-      console.error("Error de Anthropic:", r.status, j.error && j.error.message);
-      const msg = (j.error && j.error.message) || "";
-      let code = "upstream_error", human = "La IA devolvió un error (" + r.status + "): " + msg;
-      if (r.status === 401) { code = "bad_key"; human = "La clave ANTHROPIC_API_KEY no es válida. Revisala en Render → Environment."; }
-      else if (/credit balance/i.test(msg)) { code = "no_credit"; human = "La cuenta de Anthropic no tiene crédito. Cargá crédito en platform.claude.com → Billing."; }
-      else if (r.status === 404 || /model/i.test(msg)) { code = "bad_model"; human = "El modelo configurado no existe: " + MODEL + ". Borrá la variable ANTHROPIC_MODEL o poné claude-sonnet-5-5."; }
-      else if (r.status === 429 || r.status === 529) { code = "rate_limited"; human = "La IA está saturada o se alcanzó el límite. Probá de nuevo en un minuto."; }
-      else if (r.status === 413) { code = "prompt_too_large"; human = "El archivo es demasiado grande para la IA."; }
-      return res.status(502).json({ code, message: human });
-    }
-    const out = (j.content || []).filter((b) => b.type === "text").map((b) => b.text).join("");
-    if (!out.trim()) return res.status(502).json({ code: j.stop_reason === "refusal" ? "refused" : "empty_completion", message: "La IA no devolvió texto." });
-    res.json({ text: out, truncated: j.stop_reason === "max_tokens" });
-  } catch (e) {
-    console.error(e);
-    res.status(502).json({ code: "upstream_error", message: "No se pudo contactar a la IA." });
+    j = await r.json().catch(() => ({}));
+  } catch (e) { return { ok: false, status: 0, code: "upstream_error", message: "No se pudo contactar a Anthropic: " + e.message }; }
+  if (!r.ok) {
+    const msg = (j.error && j.error.message) || "";
+    console.error("Error de Anthropic:", r.status, msg);
+    if (r.status === 401) return { ok: false, status: 401, code: "bad_key", message: "La clave ANTHROPIC_API_KEY no es válida. Revisala en Render → Environment." };
+    if (/credit balance/i.test(msg)) return { ok: false, status: r.status, code: "no_credit", message: "La cuenta de Anthropic no tiene crédito. Podés usar Gemini gratis: agregá GEMINI_API_KEY en Render." };
+    if (r.status === 404 || /model/i.test(msg)) return { ok: false, status: r.status, code: "bad_model", message: "El modelo configurado no existe: " + MODEL + "." };
+    if (r.status === 429 || r.status === 529) return { ok: false, status: r.status, code: "rate_limited", message: "La IA está saturada o se alcanzó el límite. Probá de nuevo en un minuto." };
+    return { ok: false, status: r.status, code: "upstream_error", message: "La IA devolvió un error (" + r.status + "): " + msg };
   }
+  const out = (j.content || []).filter((b) => b.type === "text").map((b) => b.text).join("");
+  if (!out.trim()) return { ok: false, status: 200, code: j.stop_reason === "refusal" ? "refused" : "empty_completion", message: "La IA no devolvió texto." };
+  return { ok: true, text: out, truncated: j.stop_reason === "max_tokens" };
+}
+
+app.post("/api/ai", async (req, res) => {
+  if (!KEY) return res.status(503).json({ code: "sampling_disabled", message: "Falta configurar GEMINI_API_KEY en Render." });
+  const { input, json, images = [] } = req.body || {};
+  const text = typeof input === "string" ? input : Array.isArray(input) ? input.map((m) => m.content).join("\n\n") : "";
+  if (!text) return res.status(400).json({ code: "invalid_request", message: "Falta el texto." });
+  const out = await callAI(text, images.slice(0, 5), !!json, 8000);
+  if (!out.ok) return res.status(502).json({ code: out.code, message: out.message });
+  res.json({ text: out.text, truncated: out.truncated });
 });
 
 // Diagnóstico: abrir /diagnostico para ver qué está mal configurado
 app.get("/api/diag", async (req, res) => {
-  const out = { servidor: true, baseDeDatos: DB_KIND, claveIA: !!KEY, modelo: MODEL, pruebaIA: null };
+  const out = { servidor: true, baseDeDatos: DB_KIND, claveIA: !!KEY, proveedor: PROVIDER || "ninguno", modelo: MODEL, pruebaIA: null };
   try { out.registros = (await store.all()).length; } catch (e) { out.baseDeDatos = "error: " + e.message; }
   if (KEY) {
-    try {
-      const r = await fetch(API_BASE + "/v1/messages", {
-        method: "POST",
-        headers: { "x-api-key": KEY, "anthropic-version": "2023-06-01", "content-type": "application/json" },
-        body: JSON.stringify({ model: MODEL, max_tokens: 16, messages: [{ role: "user", content: "Respondé solo: OK" }] }),
-      });
-      const j = await r.json().catch(() => ({}));
-      out.pruebaIA = r.ok ? "OK" : "Error " + r.status + ": " + ((j.error && j.error.message) || "sin detalle");
-    } catch (e) { out.pruebaIA = "No se pudo contactar a Anthropic: " + e.message; }
+    const r = await callAI("Respondé solo con la palabra OK.", [], false, 256);
+    out.pruebaIA = r.ok ? "OK" : r.message;
   }
   res.json(out);
 });
@@ -189,5 +233,5 @@ app.use(express.static(path.join(__dirname, "public")));
 (async () => {
   store = process.env.DATABASE_URL ? await pgStore(process.env.DATABASE_URL) : fileStore();
   await seedIfEmpty();
-  app.listen(PORT, () => console.log(`Perfilar escuchando en el puerto ${PORT} · IA: ${KEY ? MODEL : "sin clave"}`));
+  app.listen(PORT, () => console.log(`Perfilar escuchando en el puerto ${PORT} · IA: ${KEY ? PROVIDER + " / " + MODEL : "sin clave"}`));
 })().catch((e) => { console.error("No se pudo iniciar:", e); process.exit(1); });
